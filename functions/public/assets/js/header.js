@@ -1,6 +1,6 @@
 document.getElementById('header').innerHTML = `
   <header class="header">
     <img src="assets/images/logo.png" alt="Logo" class="logo" />
-    <h1>HenriqueToja GPT - Teste</h1>
+    <h1>Henrique Toja GPT</h1>
   </header>
 `;
