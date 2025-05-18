@@ -1,5 +1,5 @@
 document.getElementById('footer').innerHTML = `
   <footer class="footer">
-    <p>&copy; 2025 HenriqueToja</p>
+    <p>&copy; Todos os direitos reservados</p>
   </footer>
 `;
