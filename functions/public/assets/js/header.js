@@ -1,6 +1,10 @@
 document.getElementById('header').innerHTML = `
   <header class="header">
-    <img src="assets/images/logo.png" alt="Logo" class="logo" />
-    <h1>Henrique Toja GPT</h1>
+    <div class="logo">Henrique Toja GPT</div>
+    <nav class="nav">
+      <a href="#" class="nav-link active">Home</a>
+      <a href="#" class="nav-link">Sobre</a>
+      <a href="#" class="nav-link">Contato</a>
+    </nav>
   </header>
 `;
