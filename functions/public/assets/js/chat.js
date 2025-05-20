@@ -1,202 +1,175 @@
-// ========== ESTILOS CYBERPUNK ==========
+// ========== ESTILO MINIMALISTA MODERNO COM TOQUE NEON ==========
 const chatStyles = `
 :root {
-  --cyber-bg: #12141c;
-  --cyber-panel: #191c29;
-  --cyber-border: #054060;
-  --cyber-neon: #00ffe7;    /* Neon Green */
-  --cyber-neon2: #00aaff;   /* Neon Blue */
-  --cyber-neon3: #39ff14;   /* Neon Green 2 */
-  --cyber-text: #e0e0e0;
-  --cyber-secondary: #b7b7ff;
-  --cyber-avatar-shadow: 0 0 10px var(--cyber-neon2), 0 0 4px var(--cyber-neon);
+  --cyber-bg: #11171e;
+  --cyber-panel: #18202b;
+  --cyber-border: #00ffe7;
+  --cyber-neon: #00ffe7;
+  --cyber-neon2: #00baff;
+  --cyber-neon3: #39ff14;
+  --cyber-text: #e6f9fa;
+  --cyber-placeholder: #7befff;
 }
 body {
-  background: linear-gradient(135deg, #0f1121 0%, #1b193a 100%);
+  background: linear-gradient(135deg, #11171e 0%, #1a2333 100%);
 }
 .cyber-chat-box {
   background: var(--cyber-panel);
   border-radius: 18px;
-  border: 2px solid var(--cyber-neon2);
+  border: 1.5px solid var(--cyber-border);
   max-width: 400px;
   width: 96vw;
-  box-shadow: 0 4px 32px 0 #000b, 0 0 24px 2px var(--cyber-neon2);
+  margin: 40px auto;
+  box-shadow: 0 0 15px #00ffe72e, 0 6px 32px 0 #000b;
   display: flex;
   flex-direction: column;
-  margin: 30px 0;
   overflow: hidden;
+  transition: box-shadow 0.25s;
 }
-
 .cyber-chat-header {
   display: flex;
   align-items: center;
-  padding: 14px 18px;
-  background: linear-gradient(92deg, var(--cyber-panel) 70%, var(--cyber-neon2) 100%);
-  border-bottom: 2px solid var(--cyber-border);
+  padding: 10px 19px 7px 19px;
+  background: transparent;
+  border: none;
   position: relative;
 }
-
 .cyber-chat-avatar {
-  width: 46px;
-  height: 46px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  box-shadow: var(--cyber-avatar-shadow);
-  border: 2px solid var(--cyber-neon);
+  box-shadow: 0 0 0 2px var(--cyber-neon2);
+  border: 2px solid var(--cyber-border);
   object-fit: cover;
-  margin-right: 14px;
-  background: #2a2c44;
+  margin-right: 11px;
 }
-
 .cyber-chat-username {
-  font-weight: 700;
-  color: var(--cyber-neon);
-  font-size: 1.15em;
-  letter-spacing: 0.07em;
-  margin-right: auto;
-  text-shadow: 0 0 6px var(--cyber-neon);
-}
-
-.cyber-chat-status {
-  font-size: 0.97em;
+  font-weight: 600;
   color: var(--cyber-neon2);
+  font-size: 1.09em;
+  letter-spacing: 0.05em;
+  margin-right: auto;
+  text-shadow: 0 0 4px var(--cyber-neon2);
+}
+.cyber-chat-status {
+  font-size: 0.93em;
+  color: var(--cyber-neon);
   display: flex;
   align-items: center;
 }
-
 .cyber-chat-status .dot {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   background: linear-gradient(120deg, var(--cyber-neon), var(--cyber-neon2));
   border-radius: 50%;
-  margin-right: 6px;
+  margin-right: 4px;
   animation: blink 1.6s infinite alternate;
 }
-
-@keyframes blink {
-  to { opacity: 0.4; }
-}
-
+@keyframes blink { to { opacity: 0.5; } }
 .cyber-chat-body {
   flex: 1;
-  padding: 18px 18px 8px 18px;
-  background: linear-gradient(130deg, #191c29 0%, #221e34 100%);
+  padding: 16px 18px 8px 18px;
+  background: transparent;
   overflow-y: auto;
-  max-height: 40vh;
-  min-height: 120px;
+  max-height: 45vh;
+  min-height: 110px;
   font-size: 1em;
   color: var(--cyber-text);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
-
 .cyber-chat-message {
   display: flex;
   flex-direction: column;
   margin-bottom: 2px;
-  animation: fadeIn 0.4s;
+  animation: fadeIn 0.33s;
 }
-
 .cyber-chat-message.user .cyber-chat-bubble {
   align-self: flex-end;
   background: linear-gradient(90deg, var(--cyber-neon3) 0%, var(--cyber-neon2) 100%);
-  color: #222;
-  box-shadow: 0 0 8px var(--cyber-neon3);
-}
-
-.cyber-chat-message.bot .cyber-chat-bubble {
+  color: #1a2333;
+  box.cyber-chat-message.bot .cyber-chat-bubble {
   align-self: flex-start;
-  background: linear-gradient(90deg, #242a3a 0%, #1d2032 100%);
+  background: rgba(19,31,44,0.7);
   border: 1.5px solid var(--cyber-neon2);
   color: var(--cyber-neon);
-  box-shadow: 0 0 12px 2px var(--cyber-neon2);
+  box-shadow: 0 0 8px 2px var(--cyber-neon2);
 }
-
 .cyber-chat-bubble {
-  padding: 11px 16px;
-  border-radius: 14px;
-  margin-top: 2px;
-  font-size: 1.05em;
-  max-width: 280px;
-  word-break: break-word;
-  line-height: 1.5;
-  position: relative;
-  animation: popIn 0.25s;
+  padding: 10px 15px;
+  border-radius: 12px;
+  margin-top: 1px;
+  font-size: 1.04em;
+  max-width:-height: 1.48;
+  background: none;
+  transition: box-shadow 0.2s;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes popIn {
-  0% { transform: scale(0.88); opacity: 0.7; }
-  80% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); }
-}
-
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .cyber-chat-input-wrap {
   display: flex;
   align-items: center;
-  padding: 14px 12px;
-  background: var(--cyber-panel);
-  border-top: 2px solid var(--cyber-border);
+  padding: 11px 12px;
+  background: transparent;
+  border-top: 1px solid var(--cyber-border);
 }
-
 #cyber-chat-msg {
   flex: 1;
   resize: none;
   border: none;
   outline: none;
   border-radius: 8px;
-  padding: 10px 14px;
-  margin-right: 10px;
+  padding: 9px 13px;
+  margin-right: 12px;
   font-size: 1.04em;
-  background: #22243a;
-  color: var(--cyber-text);
-  box-shadow: 0 0 7px var(--cyber-neon2);
+  background: #121c26;
+  color: var(---text);
+  box-shadow: 0 0 6px var(--cyber-neon2);
   transition: border 0.2s, box-shadow 0.2s;
 }
-
 #cyber-chat-msg:focus {
-  border: 2px solid var(--cyber-neon);
-  box-shadow: 0 0 12px 2px var(--cyber-neon2);
+  border: 1.5px solid var(--cyber-neon2);
+  box-shadow: 0 0 11px 2px var(--cyber-neon2);
 }
-
+#cyber-chat-msg::placeholder {
+  color: var(--cyber-placeholder);
+  opacity: 1;
+}
 #cyber-send-btn {
-  background: linear-gradient(92deg, var(--cyber-neon2), var(--cyber-neon3));
+  background: linear-gradient(92deg, var(--cyber-neon2), var(--cyber-neon));
   border: none;
   outline: none;
   border-radius: 8px;
-  padding: 8px 15px;
-  color: #262626;
+  padding: 8px 16px;
+  color: #14212e;
   font-weight: bold;
-  font-size: 1.1em;
-  box-shadow: 0 0 10px var(--cyber-neon2);
+  font-size: 1.09em;
+  box-shadow: 0 0 8px var(--cyber-neon2);
   cursor: pointer;
-  transition: background 0.25s, transform 0.15s;
+  transition: background 0.2s, transform 0.13s;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 #cyber-send-btn:hover {
-  background: linear-gradient(90deg, var(--cyber-neon2), var(--cyber-neon));
-  transform: scale(1.08);
+  background: linear-gradient(90deg, var(--cyber-neon), var(--cyber-neon2));
+  transform: scale(1.05);
 }
 @media (max-width: 600px) {
   .cyber-chat-box {
     max-width: 99vw;
     min-width: 0;
+    margin: 12px 0;
   }
   .cyber-chat-header {
-    padding: 10px 8px;
+    padding: 8px 4px 6px 8px;
   }
   .cyber-chat-body {
-    padding: 8px 4px 4px 8px;
-    font-size: 0.98em;
+    padding: 7px 3px 4px 7px;
+    font-size: 0.96em;
   }
   .cyber-chat-input-wrap {
-    padding: 8px 4px;
+    padding: 7px 3px;
   }
 }
 `;
@@ -209,7 +182,7 @@ if (!document.getElementById('cyber-chat-style')) {
   document.head.appendChild(style);
 }
 
-// ========== GERAR HTML DO CHAT (SEM ENVOLVER O #cyber-chat-section) ==========
+// ========== GERAR HTML DO CHAT ==========
 const chatInnerHTML = `
   <div class="cyber-chat-box">
     <div class="cyber-chat-header">
@@ -219,9 +192,9 @@ const chatInnerHTML = `
     </div>
     <div class="cyber-chat-body" id="cyber-chat-messages"></div>
     <div class="cyber-chat-input-wrap">
-      <textarea id="cyber-chat-msg" placeholder="Digite sua mensagem..." rows="1"></textarea>
+      <textarea id="cyber-chat-msg" placeholder="Digite sua mensagem..." rows="1" autocomplete="off"></textarea>
       <button id="cyber-send-btn" title="Enviar">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21l12-9-12-9v18z"></path></svg>
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21l12-9-12-9v18z"></path></svg>
       </button>
     </div>
   </div>
@@ -251,7 +224,7 @@ if (sendBtn && input && messagesDiv) {
 }
 
 function enviarMensagem() {
-  const msg = input.value.trim();
+  const.value.trim();
   if (!msg) return;
 
   appendMessage(msg, 'user');
@@ -262,7 +235,7 @@ function enviarMensagem() {
 
   fetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-cookies-accepted': 'yes' },
     body: JSON.stringify({ mensagem: msg })
   })
     .then(res => res.json())
@@ -284,11 +257,7 @@ function appendMessage(text, sender, temp = false) {
   bubble.className = 'cyber-chat-bubble';
   bubble.innerHTML = text;
   msgDiv.appendChild(bubble);
-  messagesDiv.appendChild(msgDiv);
-  if (!temp) messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
-function autoResize() {
+  messagesDiv.appendChildfunction autoResize() {
   input.style.height = 'auto';
   input.style.height = (input.scrollHeight) + 'px';
 }
