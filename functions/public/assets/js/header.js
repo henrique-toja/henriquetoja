@@ -117,3 +117,73 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.log("Service Worker registration failed:", err));
   });
 }
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  if (!document.getElementById('pwa-install-banner')) {
+    const banner = document.createElement('div');
+    banner.id = 'pwa-install-banner';
+    banner.innerHTML = `
+      <div class="pwa-banner-cyber">
+        <span>Deseja instalar o app HenriqueToja GPT?</span>
+        <button id="pwa-install-btn">Instalar</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('pwa-install-btn').onclick = () => {
+      banner.remove();
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    };
+  }
+});
+
+// Estilo minimalista para o banner
+if (!document.getElementById('pwa-banner-cyber-style')) {
+  const style = document.createElement('style');
+  style.id = 'pwa-banner-cyber-style';
+  style.textContent = `
+    .pwa-banner-cyber {
+      position: fixed;
+      left: 50%; bottom: 22px; transform: translateX(-50%);
+      background: #191c29f0;
+      border: 1.5px solid #00ffe7;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #00ffe777;
+      color: #e0f7fa;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 9px 19px;
+      z-index: 10000;
+      font-size: 1em;
+      font-family: 'Inter', 'Orbitron', Arial, sans-serif;
+      animation: cyberSlideIn 0.7s;
+    }
+    .pwa-banner-cyber button {
+      background: linear-gradient(90deg, #00baff, #00ffe7);
+      border: none;
+      color: #1a2333;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      box-shadow: 0 0 7px #00ffe7;
+      transition: background 0.18s, box-shadow 0.18s, transform 0.14s;
+    }
+    .pwa-banner-cyber button:hover {
+      background: linear-gradient(90deg, #00ffe7, #00baff);
+      box-shadow: 0 0 16px #00baffcc, 0 0 8px #00ffe7cc;
+      transform: scale(1.035);
+    }
+    @keyframes cyberSlideIn {
+      from { opacity: 0; transform: translate(-50%, 40px);}
+      to { opacity: 1; transform: translate(-50%, 0);}
+    }
+  `;
+  document.head.appendChild(style);
+}
