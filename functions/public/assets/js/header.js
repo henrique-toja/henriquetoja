@@ -1,6 +1,6 @@
 document.getElementById('header').innerHTML = `
   <header class="header-cyber">
-    <img src="assets/images/logo.png" alt="Logo" class="header-cyber-logo" />
+    <img src="assets/images/logo.webp" alt="Logo" class="header-cyber-logo" />
     <h1 class="header-cyber-title">HenriqueToja <span class="header-cyber-sub">Teste</span></h1>
   </header>
 `;
