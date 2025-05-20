@@ -109,3 +109,11 @@ if (!document.getElementById('header-cyber-style')) {
   `;
   document.head.appendChild(style);
 }
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/assets/js/service-worker.js")
+      .catch(err => console.log("Service Worker registration failed:", err));
+  });
+}
