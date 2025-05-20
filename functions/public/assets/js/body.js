@@ -47,7 +47,12 @@ document.addEventListener("DOMContentLoaded", function() {
           }
           #cyber-chat-section {
             max-width: 98vw;
-            padding: 20px 7px 15px 7(style);
+            padding: 20px 7px 15px 7px;
+            margin: 8px 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     }
   } else {
     console.error('Elemento #main não encontrado!');
