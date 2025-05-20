@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <title>HenriqueToja Teste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <script src="assets/js/header.js"></script>
-<link rel="manifest" href="assets/manifest.json">
-<meta name="theme-color" content="#00ffe7">
+  <link rel="manifest" href="assets/manifest.json">
+  <meta name="theme-color" content="#00ffe7">
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
@@ -14,10 +13,17 @@
   <main id="main"></main>
   <footer id="footer"></footer>
 
- 
+  <script src="assets/js/header.js"></script>
   <script src="assets/js/body.js"></script>
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/chat.js"></script>
-<script src="assets/js/database.js"></script>
+  <script src="assets/js/database.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/assets/js/serviceworker.js");
+      });
+    }
+  </script>
 </body>
 </html>
