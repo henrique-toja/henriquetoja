@@ -21,42 +21,39 @@ if (!document.getElementById('header-cyber-style')) {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 18px 0 12px 0;
-      background: linear-gradient(92deg, rgba(16,34,43,0.92) 60%, rgba(0,170,255,0.18) 120%);
-      border-bottom: 2px solid #00ffe7;
-      box-shadow: 0 3px 24px 0 #00ffe744, 0 1px 2px #00aaff33;
-      position: relative;
-      min-height: 70px;
+      padding: 12px 0 9px 0;
+      background: rgba(18, 29, 36, 0.95);
+      border-bottom: 1.5px solid #00ffe7;
+      box-shadow: 0 1px 10px 0 #00ffe73c;
+      min-height: 54px;
       z-index: 100;
-      backdrop-filter: blur(14px) saturate(150%);
+      backdrop-filter: blur(6px) saturate(120%);
     }
     .header-cyber-logo-wrap {
       background: linear-gradient(135deg, #00ffe7 7%, #00aaff 100%);
       border-radius: 50%;
-      padding: 3px;
-      box-shadow: 0 0 18px #00ffe7aa, 0 0 9px #00aaff77;
-      margin-right: 20px;
+      padding: 2px;
+      box-shadow: 0 0 10px #00ffe7aa, 0 0 5px #00aaff66;
+      margin-right: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: box-shadow 0.3s;
-    }
-    .header-cyber-logo-wrap:hover {
-      box-shadow: 0 0 32px #00ffe7cc, 0 0 18px #00aaffbb;
+      transition: box-shadow 0. .header-cyber-logo-wrap:hover {
+      box-shadow: 0 0 18px #00ffe7cc, 0 0 7px #00aaffbb;
     }
     .header-cyber-logo {
-      height: 54px;
-      width: 54px;
+      height: 36px;
+      width: 36px;
       border-radius: 50%;
       object-fit: cover;
       background: #131c27;
-      border: 2.5px solid #00aaff;
-      box-shadow: 0 0 16px #00ffe7cc;
-      transition: transform 0.3s;
+      border: 1.5px solid #00aaff;
+      box-shadow: 0 0 7px #00ffe7bb;
+      transition: transform 0.18s;
     }
     .header-cyber-logo:hover {
-      transform: scale(1.08) rotate(8deg);
-      box-shadow: 0 0 32px #00ffe7cc, 0 0 18px #00aaffbb;
+      transform: scale(1.06) rotate(6deg);
+      box-shadow: 0 0 20px #00ffe7cc, 0 0 12px #00aaffbb;
     }
     .header-cyber-title-group {
       display: flex;
@@ -68,46 +65,46 @@ if (!document.getElementById('header-cyber-style')) {
       font-family: 'Orbitron', 'Inter', 'Roboto', 'Arial', sans-serif;
       color: #00ffe7;
       font-weight: 900;
-      font-size: 2.2em;
-      letter-spacing: 2.5px;
+      font-size: 1.38em;
+      letter-spacing: 1.1px;
       margin: 0;
-      text-shadow: 0 0 9px #00ffe7, 0 0 20px #00aaff99;
+      text-shadow: 0 0 6px #00ffe7, 0 0 10px #00aaff77;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 7px;
       line-height: 1;
     }
     .header-cyber-sub {
-      font-size: 0.5em;
+      font-size: 0.48em;
       color: #00aaff;
       font-weight: 700;
-      margin-left: 9px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px #00aaffcc, 0 0 8px #00ffe799;
+      margin-left: 5px;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 7px #00aaffbb, 0 0 5px #00ffe766;
       background: linear-gradient(90deg, #00ffe7, #00aaff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .header-cyber-glow-bar {
-      margin-top: 8px;
-      width: 82%;
-      height: 4px;
+      margin-top: 6px;
+      width: 65%;
+      height: 3px;
       border-radius: 2px;
-      background: linear-gradient(90deg, #00ffe7 5%, #00aaff 80%);
-      box-shadow: 0 0 14px #00ffe7aa, 0 0 6px #00aaff66;
-      animation: cyberGlowBar 2.2s infinite alternate;
+      background: linear-gradient(90deg, #00ffe7 7%, #00aaff 90%);
+      box-shadow: 0 0 8px #00ffe7bb, 0 0 4px #00aaff44;
+      animation: cyberGlowBar 2s infinite alternate;
     }
     @keyframes cyberGlowBar {
-      from { filter: brightness(1) blur(0.5px);}
-      to   { filter: brightness(1.6) blur(2px);}
+      from { filter: brightness(1) blur(0.3px);}
+      to   { filter: brightness(1.4) blur(1.2px);}
     }
     @media (max-width: 600px) {
-      .header-cyber-glass { padding: 8px 0 6px 0; min-height: 44px; }
-      .header-cyber-logo { height: 32px; width: 32px; }
-      .header-cyber-logo-wrap { margin-right: 10px; }
-      .header-cyber-title { font-size: 1.13em; letter-spacing: 1.1px; gap: 6px; }
-      .header-cyber-sub { font-size: 0.7em; margin-left: 5px; }
-      .header-cyber-glow-bar { width: 65%; margin-top: 7px; }
+      .header-cyber-glass { padding: 6px 0 4px 0; min-height: 36px; }
+      .header-cyber-logo { height: 22px; width: 22px; }
+      .header-cyber-logo-wrap { margin-right: 7px; }
+      .header-cyber-title { font-size: 0.81em; letter-spacing: 0.4px; gap: 3px; }
+      .header-cyber-sub { font-size: 0.8em; margin-left: 3px; }
+      .header-cyber-glow-bar { width: 38%; margin-top: 4px; }
     }
   `;
   document.head.appendChild(style);
