@@ -64,3 +64,66 @@ export default (app) => {
     }
   });
 };
+
+
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const path = require('path');
+const { stringify } = require('csv-stringify/sync');
+const app = express();
+
+app.use(express.json());
+app.use(cookieParser());
+
+function getUserId(req, res) {
+  let userId = req.cookies.user_id;
+  if (!userId) {
+    userId = 'user_' + Math.random().toString(36).substring(2, 12);
+    res.cookie('user_id', userId, { httpOnly: true, maxAge: 31536000000 });
+  }
+  return userId;
+}
+
+function ensureDirSync(dir) {
+  if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
+app.post('/api/chat', async (req, res) => {
+  // Exija consentimento explícito no cabeçalho, body, ou cookie
+  const consent = req.headers['x-cookies-accepted'] === 'yes';
+
+  if (!consent) {
+    return res.status(403).json({ erro: 'Consentimento de cookies não fornecido.' });
+  }
+
+  const mensagem = req.body.mensagem || '';
+  const userId = getUserId(req, res);
+
+  const resposta = "Resposta do GPT para: " + mensagem;
+
+  const dir = path.join(__dirname, 'database', 'chats');
+  ensureDirSync(dir);
+  const filePath = path.join(dir, `${userId}.csv`);
+
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, 'timestamp,mensagem,resposta\n');
+  }
+
+  const row = {
+    timestamp: new Date().toISOString(),
+    mensagem,
+    resposta
+  };
+  const csvLine = stringify([row], { header: false });
+
+  fs.appendFile(filePath, csvLine, (err) => {
+    if (err) console.error('Erro ao escrever CSV:', err);
+  });
+
+  res.json({ resposta });
+});
+
+// app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
