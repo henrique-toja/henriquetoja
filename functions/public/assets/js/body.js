@@ -4,7 +4,6 @@ document.getElementById('main').innerHTML = `
   </main>
 `;
 
-// Opcional: estilo básico para o main, integrando ao tema cyberpunk do chat
 if (!document.getElementById('main-cyber-style')) {
   const style = document.createElement('style');
   style.id = 'main-cyber-style';
@@ -12,16 +11,41 @@ if (!document.getElementById('main-cyber-style')) {
     .main-cyber {
       min-height: 100vh;
       width: 100vw;
-      background: linear-gradient(135deg, #0f1121 0%, #1b193a 100%);
+      background: #11171e;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      transition: background 0.3s;
+    }
+    #cyber-chat-section {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(12, 23, 34, 0.93);
+      border-radius: 18px;
+      box-shadow: 0 0 16px #00ffe755, 0 0 5px #00baff44;
+      border: 1.5px solid #00ffe7;
+      padding: 36px 28px 28px 28px;
+      margin: 24px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(3px);
+      transition: box-shadow 0.2s, border 0.2s;
+    }
+    #cyber-chat-section:focus-within, #cyber-chat-section:hover {
+      box-shadow: 0 0 26px #00ffe7aa, 0 0 12px #00baff88;
+      border-color: #03ff9e;
     }
     @media (max-width: 600px) {
       .main-cyber {
         min-height: 100dvh;
         padding: 0;
+      }
+      #cyber-chat-section {
+        max-width: 98vw;
+        padding: 20px 7px 15px 7px;
+        margin: 8px 0;
       }
     }
   `;
