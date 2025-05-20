@@ -1,6 +1,9 @@
-// Banner de consentimento de cookies - Cyberpunk Style
+// Banner de consentimento de cookies - Cyberpunk Style + evento customizado
 (function() {
-  if (localStorage.getItem('cookiesAccepted')) return;
+  if (localStorage.getItem('cookiesAccepted')) {
+    document.dispatchEvent(new Event('cookies:accepted'));
+    return;
+  }
 
   const html = `
     <div class="cookie-banner-cyber">
@@ -15,7 +18,6 @@
 
   document.body.insertAdjacentHTML('beforeend', html);
 
-  // CSS do banner cyberpunk
   if (!document.getElementById('cookie-banner-cyber-style')) {
     const style = document.createElement('style');
     style.id = 'cookie-banner-cyber-style';
@@ -93,7 +95,26 @@
   document.getElementById('cookie-accept-btn').onclick = function() {
     localStorage.setItem('cookiesAccepted', 'yes');
     document.querySelector('.cookie-banner-cyber').remove();
+    document.dispatchEvent(new Event('cookies:accepted'));
   };
 })();
 
- 
+// Função sensível (exemplo)
+function sendMessageToBackend(message) {
+  // ...envio AJAX/fetch aqui...
+}
+
+// Garantia de só rodar se houver consentimento
+function habilitaFuncionalidades() {
+  // Chame aqui tudo que depende de consentimento
+  // Exemplo:
+  // sendMessageToBackend('Olá');
+  console.log('Consentimento ativo: funcionalidades liberadas!');
+}
+
+// Checa consentimento ao carregar a página
+if (localStorage.getItem('cookiesAccepted')) {
+  habilitaFuncionalidades();
+} else {
+  document.addEventListener('cookies:accepted', habilitaFuncionalidades);
+}
