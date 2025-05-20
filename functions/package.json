@@ -8,18 +8,18 @@
     "start": "node index.js",
     "serve": "firebase emulators:start --only functions"
   },
+
 "dependencies": {
-  "dotenv": "^16.5.0",
-  "express": "^4.21.2",
-  "firebase-admin": "^13.4.0",
-  "firebase-functions": "^6.3.2",
+  "dotenv": "latest",
+  "express": "latest",
+  "firebase-admin": "latest",
+  "firebase-functions": "latest",
   "@azure-rest/ai-inference": "latest",
   "@azure/core-auth": "latest",
   "@azure/core-sse": "latest",
-  "cookie-parser": "^1.4.6",
-  "csv-stringify": "^6.4.2"
+  "cookie-parser": "latest",
+  "csv-stringify": "latest"
 }
-  
   "author": "Henrique Toja",
   "license": "MIT"
 }
