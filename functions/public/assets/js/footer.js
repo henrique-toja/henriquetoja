@@ -7,7 +7,6 @@ document.getElementById('footer').innerHTML = `
   </footer>
 `;
 
-// CSS cyberpunk para o footer
 if (!document.getElementById('footer-cyber-style')) {
   const style = document.createElement('style');
   style.id = 'footer-cyber-style';
@@ -16,14 +15,16 @@ if (!document.getElementById('footer-cyber-style')) {
       width: 100vw;
       padding: 0;
       margin: 0;
-      background: linear-gradient(92deg, #171a29 70%, #ff00cc 120%);
-      border-top: 2px solid #ff00cc;
-      box-shadow: 0 -2px 24px 0 #ff00cc44;
+      background: linear-gradient(92deg, #171a29 70%, #00aaff 110%, #00ffe7 130%);
+      border-top: 2px solid #00ffe7;
+      box-shadow: 0 -2px 24px 0 #00ffe744;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 58px;
       z-index: 100;
+      position: relative;
+      backdrop-filter: blur(10px) saturate(1.2);
     }
     .footer-cyber-content {
       text-align: center;
@@ -37,14 +38,15 @@ if (!document.getElementById('footer-cyber-style')) {
       color: #00ffe7;
       font-weight: bold;
       font-size: 1.1em;
-      text-shadow: 0 0 6px #00ffe7, 0 0 12px #ff00cc66;
+      text-shadow: 0 0 8px #00ffe7, 0 0 16px #00aaffaa;
       letter-spacing: 1px;
+      filter: drop-shadow(0 0 4px #00ffe7);
     }
     .footer-cyber-rights {
-      color: #b7b7ff;
+      color: #00aaff;
       font-size: 0.99em;
       letter-spacing: 0.08em;
-      text-shadow: 0 0 4px #ff00cc44;
+      text-shadow: 0 0 6px #00aaff88;
     }
     @media (max-width: 600px) {
       .footer-cyber-content { font-size: 0.97em; }
