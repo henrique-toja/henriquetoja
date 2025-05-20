@@ -1,14 +1,12 @@
-// chat.js
-
 // ========== ESTILOS CYBERPUNK ==========
 const chatStyles = `
 :root {
   --cyber-bg: #12141c;
   --cyber-panel: #191c29;
-  --cyber-border: #3a3f58;
-  --cyber-neon: #00ffe7;
-  --cyber-neon2: #ff00cc;
-  --cyber-neon3: #fffb00;
+  --cyber-border: #054060;
+  --cyber-neon: #00ffe7;    /* Neon Green */
+  --cyber-neon2: #00aaff;   /* Neon Blue */
+  --cyber-neon3: #39ff14;   /* Neon Green 2 */
   --cyber-text: #e0e0e0;
   --cyber-secondary: #b7b7ff;
   --cyber-avatar-shadow: 0 0 10px var(--cyber-neon2), 0 0 4px var(--cyber-neon);
@@ -16,14 +14,6 @@ const chatStyles = `
 body {
   background: linear-gradient(135deg, #0f1121 0%, #1b193a 100%);
 }
-#cyber-chat-section {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  min-height: 100vh;
-  z-index: 1000;
-}
-
 .cyber-chat-box {
   background: var(--cyber-panel);
   border-radius: 18px;
@@ -37,7 +27,9 @@ body {
   overflow: hidden;
 }
 
-.cyber-chat-header: center;
+.cyber-chat-header {
+  display: flex;
+  align-items: center;
   padding: 14px 18px;
   background: linear-gradient(92deg, var(--cyber-panel) 70%, var(--cyber-neon2) 100%);
   border-bottom: 2px solid var(--cyber-border);
@@ -217,9 +209,8 @@ if (!document.getElementById('cyber-chat-style')) {
   document.head.appendChild(style);
 }
 
-// ========== GERAR HTML DO CHAT ==========
-const chatHTML = `
-<div id="cyber-chat-section">
+// ========== GERAR HTML DO CHAT (SEM ENVOLVER O #cyber-chat-section) ==========
+const chatInnerHTML = `
   <div class="cyber-chat-box">
     <div class="cyber-chat-header">
       <img src="assets/images/henriquetoja.jpg" class="cyber-chat-avatar" />
@@ -234,15 +225,13 @@ const chatHTML = `
       </button>
     </div>
   </div>
-</div>
 `;
 
-// ========== INJETAR HTML DO CHAT ==========
+// ========== INSERE O CHAT NO ELEMENTO JÁ EXISTENTE ==========
 (function mountCyberChat() {
-  // Evita múltiplas instâncias
-  if (document.getElementById('cyber-chat-section')) return;
-  // Tenta inserir no final do body
-  document.body.insertAdjacentHTML('beforeend', chatHTML);
+  const section = document.getElementById('cyber-chat-section');
+  if (!section || section.hasChildNodes()) return;
+  section.innerHTML = chatInnerHTML;
 })();
 
 // ========== FUNÇÕES DE INTERAÇÃO ==========
@@ -250,17 +239,17 @@ const messagesDiv = document.getElementById('cyber-chat-messages');
 const input = document.getElementById('cyber-chat-msg');
 const sendBtn = document.getElementById('cyber-send-btn');
 
-// Enviar ao clicar ou pressionar Enter
-sendBtn.addEventListener('click', enviarMensagem);
-input.addEventListener('keypress', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    enviarMensagem();
-  }
-});
-input.addEventListener('input', autoResize);
+if (sendBtn && input && messagesDiv) {
+  sendBtn.addEventListener('click', enviarMensagem);
+  input.addEventListener('keypress', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      enviarMensagem();
+    }
+  });
+  input.addEventListener('input', autoResize);
+}
 
-// ========== ENVIO DE MENSAGEM (PARA O BACKEND) ==========
 function enviarMensagem() {
   const msg = input.value.trim();
   if (!msg) return;
@@ -278,7 +267,6 @@ function enviarMensagem() {
   })
     .then(res => res.json())
     .then(data => {
-      // Remove "digitando..."
       messagesDiv.removeChild(messagesDiv.lastChild);
       const resposta = data?.resposta || 'Erro na resposta';
       appendMessage(resposta, 'bot');
@@ -289,7 +277,6 @@ function enviarMensagem() {
     });
 }
 
-// ========== ADICIONAR MENSAGEM NA TELA ==========
 function appendMessage(text, sender, temp = false) {
   const msgDiv = document.createElement('div');
   msgDiv.className = `cyber-chat-message ${sender}`;
@@ -301,7 +288,6 @@ function appendMessage(text, sender, temp = false) {
   if (!temp) messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-// ========== AUTO-RESIZE DO TEXTAREA ==========
 function autoResize() {
   input.style.height = 'auto';
   input.style.height = (input.scrollHeight) + 'px';
