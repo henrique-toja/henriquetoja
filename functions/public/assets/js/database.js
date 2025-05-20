@@ -1,4 +1,4 @@
-// Banner de consentimento de cookies - Cyberpunk Style + evento customizado
+// Banner de consentimento de cookies - Minimalista Neon Tech
 (function() {
   if (localStorage.getItem('cookiesAccepted')) {
     document.dispatchEvent(new Event('cookies:accepted'));
@@ -9,7 +9,7 @@
     <div class="cookie-banner-cyber">
       <div class="cookie-banner-content">
         <span>
-          Este site utiliza cookies para melhorar sua experiência de navegação e recursos. Ao continuar, você concorda com nossa <a href="/privacidade" target="_blank">Política de Privacidade</a>.
+          Este site utiliza cookies para melhorar sua experiência. Ao continuar, você concorda com nossa <a href="/privacidade" target="_blank">Política de Privacidade</a>.
         </span>
         <button id="cookie-accept-btn" class="cookie-accept-btn-cyber">Aceitar</button>
       </div>
@@ -25,27 +25,27 @@
       .cookie-banner-cyber {
         position: fixed;
         left: 0; right: 0; bottom: 0;
-        z-index: 9999;
+        z-index: 10000;
         display: flex;
         justify-content: center;
         align-items: flex-end;
         pointer-events: none;
       }
       .cookie-banner-content {
-        margin: 24px;
-        padding: 20px 28px;
-        background: linear-gradient(100deg, rgba(16,34,43,0.96) 73%, rgba(0,170,255,0.14) 120%);
-        border: 2px solid #00ffe7;
-        border-radius: 16px;
-        box-shadow: 0 0 24px #00aaff66, 0 0 8px #00ffe788;
+        margin: 14px;
+        padding: 14px 22px;
+        background: rgba(18, 29, 36, 0.96);
+        border: 1.5px solid #00ffe7;
+        border-radius: 12px;
+        box-shadow: 0 0 20px #00ffe755;
         color: #e0f7fa;
         font-family: 'Inter', 'Orbitron', Arial, sans-serif;
-        font-size: 1.05em;
+        font-size: 1em;
         display: flex;
         align-items: center;
-        gap: 26px;
+        gap: 18px;
         pointer-events: all;
-        backdrop-filter: blur(11px) saturate(1.3);
+        backdrop-filter: blur(7px) saturate(1.2);
         animation: cyberSlideIn 0.7s;
       }
       .cookie-banner-content a {
@@ -54,38 +54,37 @@
         transition: color 0.2s;
       }
       .cookie-banner-content a:hover {
-        color: #00aaff;
+        color: #00baff;
       }
       .cookie-accept-btn-cyber {
-        background: linear-gradient(90deg, #00aaff 0%, #00ffe7 90%);
-        color: #031015;
+        background: linear-gradient(90deg, #00baff 0%, #00ffe7 100%);
+        color: #1a2333;
         border: none;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 1em;
-        border-radius: 8px;
-        padding: 10px 28px;
+        border-radius: 7px;
+        padding: 8px 22px;
         cursor: pointer;
-        box-shadow: 0 0 12px #00ffe7, 0 0 6px #00aaff99;
+        box-shadow: 0 0 8px #00ffe7, 0 0 3px #00baff99;
         margin-left: 8px;
-        transition: background 0.22s, box-shadow 0.22s, transform 0.17s;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.14s;
       }
-      .cookie-accept-btn-cyber:hover {
-        background: linear-gradient(90deg, #00ffe7 0%, #00aaff 100%);
-        box-shadow: 0 0 24px #00aaffcc, 0 0 12px #00ffe7cc;
-        transform: scale(1.045);
+      .cookie-accept90deg, #00ffe7 0%, #00baff 100%);
+        box-shadow: 0 0 14px #00baffcc, 0 0 7px #00ffe7cc;
+        transform: scale(1.035);
       }
       @media (max-width: 600px) {
         .cookie-banner-content {
           flex-direction: column;
           align-items: stretch;
           font-size: 0.97em;
-          padding: 13px 10px;
-          gap: 13px;
-          margin: 13px;
+          padding: 10px 7px;
+          gap: 9px;
+          margin: 7px;
         }
       }
       @keyframes cyberSlideIn {
-        from { opacity: 0; transform: translateY(45px);}
+        from { opacity: 0; transform: translateY(40px);}
         to { opacity: 1; transform: translateY(0);}
       }
     `;
@@ -106,9 +105,7 @@ function sendMessageToBackend(message) {
 
 // Garantia de só rodar se houver consentimento
 function habilitaFuncionalidades() {
-  // Chame aqui tudo que depende de consentimento
-  // Exemplo:
-  // sendMessageToBackend('Olá');
+ // sendMessageToBackend('Olá');
   console.log('Consentimento ativo: funcionalidades liberadas!');
 }
 
