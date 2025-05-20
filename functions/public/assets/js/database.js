@@ -69,7 +69,8 @@
         margin-left: 8px;
         transition: background 0.18s, box-shadow 0.18s, transform 0.14s;
       }
-      .cookie-accept90deg, #00ffe7 0%, #00baff 100%);
+      .cookie-accept-btn-cyber:hover {
+        background: linear-gradient(90deg, #00ffe7 0%, #00baff 100%);
         box-shadow: 0 0 14px #00baffcc, 0 0 7px #00ffe7cc;
         transform: scale(1.035);
       }
@@ -105,7 +106,9 @@ function sendMessageToBackend(message) {
 
 // Garantia de só rodar se houver consentimento
 function habilitaFuncionalidades() {
- // sendMessageToBackend('Olá');
+  // Chame aqui tudo que depende de consentimento
+  // Exemplo:
+  // sendMessageToBackend('Olá');
   console.log('Consentimento ativo: funcionalidades liberadas!');
 }
 
