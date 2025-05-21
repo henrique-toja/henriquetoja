@@ -6,19 +6,148 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="manifest" href="assets/manifest.json">
   <meta name="theme-color" content="#00ffe7">
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header id="header"></header>
-  <main id="main"></main>
-  <footer id="footer"></footer>
+  <!-- HEADER -->
+  <header class="header-cyber-glass">
+    <div class="header-cyber-logo-wrap">
+      <img src="assets/images/logo.webp" alt="Logo" class="header-cyber-logo" />
+    </div>
+    <div class="header-cyber-title-group">
+      <h1 class="header-cyber-title">
+        HenriqueToja
+        <span class="header-cyber-sub">GPT</span>
+      </h1>
+      <div class="header-cyber-glow-bar"></div>
+    </div>
+  </header>
 
-  <script src="assets/js/header.js"></script>
-  <script src="assets/js/body.js"></script>
-  <script src="assets/js/footer.js"></script>
-  <script src="assets/js/chat.js"></script>
-  <script src="assets/js/database.js"></script>
+  <!-- MAIN CHAT -->
+  <main id="main">
+    <section id="cyber-chat-section">
+      <div class="cyber-chat-box">
+        <div class="cyber-chat-header">
+          <img src="assets/images/henriquetoja.jpg" class="cyber-chat-avatar" />
+          <span class="cyber-chat-username">HenriqueToja</span>
+          <span class="cyber-chat-status"><span class="dot"></span>online</span>
+        </div>
+        <div class="cyber-chat-body" id="cyber-chat-messages"></div>
+        <div class="cyber-chat-input-wrap">
+          <textarea id="cyber-chat-msg" placeholder="Digite sua mensagem..." rows="1" autocomplete="off"></textarea>
+          <button id="cyber-send-btn" title="Enviar">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21l12-9-12-9v18z"></path></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-cyber-glass">
+    <div class="footer-cyber-content">
+      &copy; 2025 Henrique Toja. Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <!-- COOKIE BANNER + JS PWA + CHAT -->
   <script>
+    // Banner de cookies
+    (function() {
+      if (localStorage.getItem('cookiesAccepted')) {
+        document.dispatchEvent(new Event('cookies:accepted'));
+        return;
+      }
+      const html = `
+        <div class="cookie-banner-cyber">
+          <div class="cookie-banner-content">
+            <span>
+              Este site utiliza cookies para melhorar sua experiência. Ao continuar, você concorda com nossa <a href="/privacidade" target="_blank">Política de Privacidade</a>.
+            </span>
+            <button id="cookie-accept-btn" class="cookie-accept-btn-cyber">Aceitar</button>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', html);
+      document.getElementById('cookie-accept-btn').onclick = function() {
+        localStorage.setItem('cookiesAccepted', 'yes');
+        document.querySelector('.cookie-banner-cyber').remove();
+        document.dispatchEvent(new Event('cookies:accepted'));
+      };
+    })();
+
+    // Funcionalidades dependentes de consentimento
+    function habilitaFuncionalidades() {
+      // Chame aqui funcionalidades que dependem de consentimento
+      // Ex: ativar analytics, etc.
+    }
+    if (localStorage.getItem('cookiesAccepted')) {
+      habilitaFuncionalidades();
+    } else {
+      document.addEventListener('cookies:accepted', habilitaFuncionalidades);
+    }
+
+    // Chat interativo
+    (function() {
+      const messagesDiv = document.getElementById('cyber-chat-messages');
+      const input = document.getElementById('cyber-chat-msg');
+      const sendBtn = document.getElementById('cyber-send-btn');
+
+      function autoResize() {
+        input.style.height = 'auto';
+        input.style.height = (input.scrollHeight) + 'px';
+      }
+      function appendMessage(text, sender, temp = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `cyber-chat-message ${sender}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'cyber-chat-bubble';
+        bubble.innerHTML = text;
+        msgDiv.appendChild(bubble);
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        if (temp) msgDiv.classList.add('temp');
+      }
+      function enviarMensagem() {
+        const msg = input.value.trim();
+        if (!msg) return;
+        appendMessage(msg, 'user');
+        input.value = '';
+        autoResize();
+        appendMessage('<span class="typing">Digitando...</span>', 'bot', true);
+
+        fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-cookies-accepted': 'yes' },
+          body: JSON.stringify({ mensagem: msg })
+        })
+          .then(res => res.json())
+          .then(data => {
+            const tempMsg = messagesDiv.querySelector('.cyber-chat-message.bot.temp');
+            if (tempMsg) tempMsg.remove();
+            const resposta = data?.resposta || 'Erro na resposta';
+            appendMessage(resposta, 'bot');
+          })
+          .catch(() => {
+            const tempMsg = messagesDiv.querySelector('.cyber-chat-message.bot.temp');
+            if (tempMsg) tempMsg.remove();
+            appendMessage('Erro ao conectar com o servidor.', 'bot');
+          });
+      }
+
+      if (sendBtn && input && messagesDiv) {
+        sendBtn.addEventListener('click', enviarMensagem);
+        input.addEventListener('keypress', e => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            enviarMensagem();
+          }
+        });
+        input.addEventListener('input', autoResize);
+      }
+    })();
+
+    // PWA Service Worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("/assets/js/serviceworker.js");
