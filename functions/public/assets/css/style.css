@@ -15,12 +15,7 @@ html, body {
   min-height: 100vh;
   width: 100vw;
   box-sizing: border-box;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-body:focus {
-  outline: none;
+  scroll-behavior: outline: none;
 }
 
 main, .main, .main-cyber {
