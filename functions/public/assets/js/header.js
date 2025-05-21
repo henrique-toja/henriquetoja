@@ -46,14 +46,9 @@ if (!document.getElementById('header-cyber-style')) {
       width: 36px;
       border-radius: 50%;
       object-fit: cover;
-      background: #131c27;
-      border: 1.5px solid #00aaff;
+: 1.5px solid #00aaff;
       box-shadow: 0 0 7px #00ffe7bb;
-      transition: transform 0.18s;
-    }
-    .header-cyber-logo:hover {
-      transform: scale(1.06) rotate(6deg);
-      box-shadow: 0 0 20px #00ffe7cc, 0 0 12px #00aaffbb;
+      transition: transform 0.0 20px #00ffe7cc, 0 0 12px #00aaffbb;
     }
     .header-cyber-title-group {
       display: flex;
@@ -102,7 +97,7 @@ if (!document.getElementById('header-cyber-style')) {
       .header-cyber-glass { padding: 6px 0 4px 0; min-height: 36px; }
       .header-cyber-logo { height: 22px; width: 22px; }
       .header-cyber-logo-wrap { margin-right: 7px; }
-      .header-cyber-title { font-size: 0.81em; letter-spacing: 0.4px; gap: 3px; }
+      .header-cyber-title; letter-spacing: 0.4px; gap: 3px; }
       .header-cyber-sub { font-size: 0.8em; margin-left: 3px; }
       .header-cyber-glow-bar { width: 38%; margin-top: 4px; }
     }
@@ -118,20 +113,13 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  if (!document.getElementById('pwa-install-banner')) {
+')) {
     const banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
     banner.innerHTML = `
       <div class="pwa-banner-cyber">
         <span>Deseja instalar o app HenriqueToja GPT?</span>
         <button id="pwa-install-btn">Instalar</button>
-      </div>
-    `;
     document.body.appendChild(banner);
 
     document.getElementById('pwa-install-btn').onclick = () => {
@@ -177,7 +165,7 @@ if (!document.getElementById('pwa-banner-cyber-style')) {
     }
     .pwa-banner-cyber button:hover {
       background: linear-gradient(90deg, #00ffe7, #00baff);
-      box-shadow: 0 0 16px #00baffcc, 0 0 8px #00ffe7cc;
+      box-shadow: 0 0 16px0 0 8px #00ffe7cc;
       transform: scale(1.035);
     }
     @keyframes cyberSlideIn {
