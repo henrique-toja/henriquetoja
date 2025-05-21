@@ -2,101 +2,212 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>HenriqueToja Teste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="manifest" href="assets/manifest.json">
   <meta name="theme-color" content="#00ffe7">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="assets/manifest.json">
+  <title>HenriqueToja GPT</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #ffffff;
+      --accent: #00ffe7;
+      --glass: rgba(255, 255, 255, 0.05);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header, footer {
+      backdrop-filter: blur(12px);
+      background: var(--glass);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-cyber-logo { height: 40px; }
+    .header-cyber-title { font-size: 1.5rem; color: var(--accent); }
+    .header-cyber-sub { font-weight: lighter; font-size: 1rem; color: #ccc; }
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .cyber-chat-box {
+      width: 100%;
+      max-width: 600px;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 15px #00ffe73f;
+    }
+    .cyber-chat-header {
+      background: #1a1a1a;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .cyber-chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .cyber-chat-username { font-weight: bold; }
+    .cyber-chat-status { font-size: 0.8rem; color: #0f0; }
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0f0;
+      margin-right: 4px;
+    }
+    .cyber-chat-body {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .cyber-chat-message {
+      margin-bottom: 0.75rem;
+      display: flex;
+    }
+    .cyber-chat-message.user { justify-content: flex-end; }
+    .cyber-chat-bubble {
+      background: #222;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      max-width: 80%;
+    }
+    .cyber-chat-message.bot .cyber-chat-bubble {
+      background: #333;
+    }
+    .cyber-chat-input-wrap {
+      display: flex;
+      border-top: 1px solid #444;
+      padding: 0.75rem;
+      background: #1a1a1a;
+    }
+    textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      resize: none;
+      font-size: 1rem;
+      outline: none;
+    }
+    #cyber-send-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .footer-cyber-content {
+      font-size: 0.875rem;
+      color: #888;
+    }
+    .cookie-banner-cyber {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      padding: 1rem;
+      border-top: 1px solid #333;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .cookie-accept-btn-cyber {
+      margin-left: 1rem;
+      background: var(--accent);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #000;
+      cursor: pointer;
+    }
+    .typing { font-style: italic; color: #888; }
+  </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="header-cyber-glass">
-    <div class="header-cyber-logo-wrap">
-      <img src="assets/images/logo.webp" alt="Logo" class="header-cyber-logo" />
-    </div>
-    <div class="header-cyber-title-group">
-      <h1 class="header-cyber-title">
-        HenriqueToja
-        <span class="header-cyber-sub">GPT</span>
-      </h1>
-      <div class="header-cyber-glow-bar"></div>
-    </div>
+  <header>
+    <img src="assets/images/logo.webp" alt="Logo" class="header-cyber-logo" />
+    <h1 class="header-cyber-title">HenriqueToja <span class="header-cyber-sub">GPT</span></h1>
   </header>
 
-  <!-- MAIN CHAT -->
-  <main id="main">
-    <section id="cyber-chat-section">
-      <div class="cyber-chat-box">
-        <div class="cyber-chat-header">
-          <img src="assets/images/henriquetoja.jpg" class="cyber-chat-avatar" />
-          <span class="cyber-chat-username">HenriqueToja</span>
-          <span class="cyber-chat-status"><span class="dot"></span>online</span>
-        </div>
-        <div class="cyber-chat-body" id="cyber-chat-messages"></div>
-        <div class="cyber-chat-input-wrap">
-          <textarea id="cyber-chat-msg" placeholder="Digite sua mensagem..." rows="1" autocomplete="off"></textarea>
-          <button id="cyber-send-btn" title="Enviar">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21l12-9-12-9v18z"></path></svg>
-          </button>
-        </div>
+  <main>
+    <div class="cyber-chat-box">
+      <div class="cyber-chat-header">
+        <img src="assets/images/henriquetoja.jpg" class="cyber-chat-avatar" />
+        <span class="cyber-chat-username">HenriqueToja</span>
+        <span class="cyber-chat-status"><span class="dot"></span>online</span>
       </div>
-    </section>
+      <div class="cyber-chat-body" id="cyber-chat-messages"></div>
+      <div class="cyber-chat-input-wrap">
+        <textarea id="cyber-chat-msg" placeholder="Digite sua mensagem..." rows="1" autocomplete="off"></textarea>
+        <button id="cyber-send-btn" title="Enviar">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21l12-9-12-9v18z"></path></svg>
+        </button>
+      </div>
+    </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="footer-cyber-glass">
-    <div class="footer-cyber-content">
-      &copy; 2025 Henrique Toja. Todos os direitos reservados.
-    </div>
+  <footer>
+    <div class="footer-cyber-content">&copy; 2025 Henrique Toja. Todos os direitos reservados.</div>
   </footer>
 
-  <!-- COOKIE BANNER + JS PWA + CHAT -->
   <script>
-    // Banner de cookies
-    (function() {
+    // Cookies
+    (function () {
       if (localStorage.getItem('cookiesAccepted')) {
         document.dispatchEvent(new Event('cookies:accepted'));
         return;
       }
-      const html = `
+      const banner = `
         <div class="cookie-banner-cyber">
-          <div class="cookie-banner-content">
-            <span>
-              Este site utiliza cookies para melhorar sua experiência. Ao continuar, você concorda com nossa <a href="/privacidade" target="_blank">Política de Privacidade</a>.
-            </span>
-            <button id="cookie-accept-btn" class="cookie-accept-btn-cyber">Aceitar</button>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', html);
-      document.getElementById('cookie-accept-btn').onclick = function() {
+          Este site utiliza cookies para melhorar sua experiência. <a href="/privacidade" target="_blank">Política de Privacidade</a>.
+          <button id="cookie-accept-btn" class="cookie-accept-btn-cyber">Aceitar</button>
+        </div>`;
+      document.body.insertAdjacentHTML('beforeend', banner);
+      document.getElementById('cookie-accept-btn').onclick = () => {
         localStorage.setItem('cookiesAccepted', 'yes');
         document.querySelector('.cookie-banner-cyber').remove();
         document.dispatchEvent(new Event('cookies:accepted'));
       };
     })();
 
-    // Funcionalidades dependentes de consentimento
     function habilitaFuncionalidades() {
-      // Chame aqui funcionalidades que dependem de consentimento
-      // Ex: ativar analytics, etc.
+      // ex: analytics
     }
+
     if (localStorage.getItem('cookiesAccepted')) {
       habilitaFuncionalidades();
     } else {
       document.addEventListener('cookies:accepted', habilitaFuncionalidades);
     }
 
-    // Chat interativo
-    (function() {
+    // Chat
+    (() => {
       const messagesDiv = document.getElementById('cyber-chat-messages');
       const input = document.getElementById('cyber-chat-msg');
       const sendBtn = document.getElementById('cyber-send-btn');
 
       function autoResize() {
         input.style.height = 'auto';
-        input.style.height = (input.scrollHeight) + 'px';
+        input.style.height = `${input.scrollHeight}px`;
       }
+
       function appendMessage(text, sender, temp = false) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `cyber-chat-message ${sender}`;
@@ -108,6 +219,7 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
         if (temp) msgDiv.classList.add('temp');
       }
+
       function enviarMensagem() {
         const msg = input.value.trim();
         if (!msg) return;
@@ -123,34 +235,29 @@
         })
           .then(res => res.json())
           .then(data => {
-            const tempMsg = messagesDiv.querySelector('.cyber-chat-message.bot.temp');
-            if (tempMsg) tempMsg.remove();
-            const resposta = data?.resposta || 'Erro na resposta';
-            appendMessage(resposta, 'bot');
+            document.querySelector('.cyber-chat-message.bot.temp')?.remove();
+            appendMessage(data?.resposta || 'Erro na resposta', 'bot');
           })
           .catch(() => {
-            const tempMsg = messagesDiv.querySelector('.cyber-chat-message.bot.temp');
-            if (tempMsg) tempMsg.remove();
+            document.querySelector('.cyber-chat-message.bot.temp')?.remove();
             appendMessage('Erro ao conectar com o servidor.', 'bot');
           });
       }
 
-      if (sendBtn && input && messagesDiv) {
-        sendBtn.addEventListener('click', enviarMensagem);
-        input.addEventListener('keypress', e => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            enviarMensagem();
-          }
-        });
-        input.addEventListener('input', autoResize);
-      }
+      sendBtn.addEventListener('click', enviarMensagem);
+      input.addEventListener('keypress', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          enviarMensagem();
+        }
+      });
+      input.addEventListener('input', autoResize);
     })();
 
-    // PWA Service Worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/assets/js/serviceworker.js");
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/assets/js/serviceworker.js');
       });
     }
   </script>
