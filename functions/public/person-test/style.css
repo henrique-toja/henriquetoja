@@ -4,7 +4,8 @@
     --text-color: #f0f0f0;
     --bg-color-start: #161623;
     --bg-color-end: #1a1a2e;
-    --card-bg-color: rgba(255, 255, 255, 0.05);
+    /* Fundo do cartão otimizado: sem blur, apenas transparência */
+    --card-bg-color: rgba(30, 30, 50, 0.6); 
     --card-border-color: rgba(255, 255, 255, 0.2);
     --hover-color: rgba(255, 255, 255, 0.1);
     --selected-color: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
@@ -21,7 +22,7 @@ body {
     background: linear-gradient(45deg, var(--bg-color-start), var(--bg-color-end));
     color: var(--text-color);
     min-height: 100vh;
-    overflow: hidden;
+    overflow: hidden; /* Evita barras de rolagem durante as transições */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,9 +30,10 @@ body {
 
 #app-container {
     width: 100%;
-    height: 100vh;
-    perspective: 1000px; /* A profundidade da cena 3D */
+    height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 #quiz-header {
@@ -39,14 +41,16 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 1.5rem 2rem;
+    padding: 1rem 1.5rem;
     z-index: 100;
 }
 
 .progress-bar-container {
     width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     height: 8px;
-    background-color: var(--card-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -59,50 +63,60 @@ body {
     transition: width 0.4s ease-out;
 }
 
+/* O 'túnel' agora é um simples container centralizado */
 #quiz-tunnel {
-    width: 100%;
-    height: 100%;
-    position: absolute;
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* Limita a largura no desktop */
+    margin: 0 auto;
 }
 
+/* O carrossel agora é um container para o cartão ativo */
 #quiz-carousel {
-    transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    width: 100%;
+    height: auto;
+    position: relative;
 }
 
 .question-card {
-    position: absolute;
-    width: clamp(300px, 90vw, 600px);
-    padding: 2rem;
+    width: 100%;
+    padding: 2rem 1.5rem;
     background: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
     border-radius: 16px;
-    backdrop-filter: blur(15px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    transform-origin: center;
-    backface-visibility: hidden; /* Evita flickering em animações 3D */
-    opacity: 0; /* Começa invisível */
-    transform: scale(0.8); /* Começa menor */
-    animation: fadeIn 0.8s forwards;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+
+    /* Animação de Entrada/Saída */
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    /* Dica de performance para o navegador */
+    will-change: transform, opacity; 
 }
 
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
+/* Estados da animação */
 .question-card.active {
     opacity: 1;
-    z-index: 10;
+    transform: scale(1);
+    position: relative; /* Torna o cartão ativo o único a ocupar espaço */
 }
+
+.question-card.exiting {
+    opacity: 0;
+    transform: scale(1.1);
+}
+
 
 .question-text {
     font-size: 1.25rem;
@@ -133,7 +147,6 @@ body {
 
 .option-label:hover {
     background-color: var(--hover-color);
-    border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
 }
 
@@ -154,14 +167,8 @@ body {
 }
 
 #start-card .question-text, #result-card .question-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-}
-
-#start-card p {
-    text-align: center;
-    opacity: 0.9;
-    line-height: 1.6;
 }
 
 #start-btn {
@@ -221,4 +228,3 @@ body {
 .hidden {
     display: none !important;
 }
-
