@@ -228,3 +228,17 @@ body {
 .hidden {
     display: none !important;
 }
+
+.intro-video-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+#intro-video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    display: block;
+}
