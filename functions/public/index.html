@@ -1,159 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#00ffe7">
-  <link rel="manifest" href="assets/manifest.json">
-  <title>Henrique Toja AI</title>
-  <!-- Incluindo o Tailwind CSS via CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* Estilos personalizados para funcionalidades não cobertas pelo Tailwind v2 */
-    .backdrop-blur-md {
-      backdrop-filter: blur(12px);
-    }
-    .animate-blink {
-      animation: blink 1s infinite;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-  </style>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Teste Clínico de Personalidade Imersivo</title>
+
+    <meta name="theme-color" content="#1a1a2e"/>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png"> <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
-  <!-- Cabeçalho -->
-  <header class="bg-black/30 backdrop-blur-md p-4 flex justify-between items-center">
-    <img src="assets/images/logo.webp" alt="Logo" class="h-10" />
-    <h1 class="text-2xl text-cyan-400">Henrique Toja <span class="text-gray-300">GPT</span></h1>
-  </header>
+<body>
+    <div id="app-container">
+        <header id="quiz-header" class="hidden">
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="flex-1 flex justify-center items-center p-4">
-    <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col">
-      <!-- Cabeçalho do Chat -->
-      <div class="flex items-center gap-4 p-4 bg-gray-700">
-        <img src="assets/images/henriquetoja.jpg" class="w-10 h-10 rounded-full object-cover" />
-        <span class="font-bold text-white">Henrique Toja</span>
-        <span class="text-sm text-green-500">
-          <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span>online
-        </span>
-      </div>
-      <!-- Corpo do Chat -->
-      <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
-      <!-- Área de Entrada -->
-      <div class="flex border-t border-gray-600 p-3 bg-gray-700">
-        <textarea id="cyber-chat-msg" placeholder="Escreva sua mensagem..." rows="1" class="flex-1 bg-transparent text-white resize-none text-base outline-none"></textarea>
-        <button id="cyber-send-btn" class="text-cyan-400">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 21l12-9-12-9v18z"></path>
-          </svg>
-        </button>
-      </div>
+        <main id="quiz-tunnel">
+            <div id="quiz-carousel">
+                </div>
+        </main>
     </div>
-  </main>
 
-  <!-- Rodapé -->
-  <footer class="bg-black/30 backdrop-blur-md p-4 flex justify-center items-center">
-    <div class="text-sm text-gray-500">© 2025 Henrique Toja. Todos os direitos reservados.</div>
-  </footer>
-
-  <!-- JavaScript -->
-  <script>
-    // Gerenciamento de Cookies
-    (function () {
-      if (localStorage.getItem('cookiesAccepted')) {
-        document.dispatchEvent(new Event('cookies:accepted'));
-        return;
-      }
-      const banner = `
-        <div class="cookie-banner fixed bottom-0 w-full bg-gray-800 p-4 text-center text-sm text-gray-300">
-          Este site utiliza cookies para melhorar sua experiência. 
-          <a href="/privacidade" target="_blank" class="text-cyan-400">Política de Privacidade</a>.
-          <button id="cookie-accept-btn" class="ml-4 bg-cyan-400 text-black px-4 py-2 rounded">Aceitar</button>
-        </div>`;
-      document.body.insertAdjacentHTML('beforeend', banner);
-      document.getElementById('cookie-accept-btn').onclick = () => {
-        localStorage.setItem('cookiesAccepted', 'yes');
-        document.querySelector('.cookie-banner').remove();
-        document.dispatchEvent(new Event('cookies:accepted'));
-      };
-    })();
-
-    function habilitaFuncionalidades() {
-      // Exemplo: habilitar analytics
-    }
-
-    if (localStorage.getItem('cookiesAccepted')) {
-      habilitaFuncionalidades();
-    } else {
-      document.addEventListener('cookies:accepted', habilitaFuncionalidades);
-    }
-
-    // Funcionalidade do Chat
-    (() => {
-      const messagesDiv = document.getElementById('cyber-chat-messages');
-      const input = document.getElementById('cyber-chat-msg');
-      const sendBtn = document.getElementById('cyber-send-btn');
-
-      function autoResize() {
-        input.style.height = 'auto';
-        input.style.height = `${input.scrollHeight}px`;
-      }
-
-      function appendMessage(text, sender, temp = false) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `flex ${sender === 'user' ? 'justify-end' : ''} mb-3`;
-        const bubble = document.createElement('div');
-        bubble.className = `p-2 rounded-lg max-w-[80%] ${sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-600 text-white'}`;
-        bubble.innerHTML = text;
-        msgDiv.appendChild(bubble);
-        messagesDiv.appendChild(msgDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        if (temp) msgDiv.classList.add('temp');
-      }
-
-      function enviarMensagem() {
-        const msg = input.value.trim();
-        if (!msg) return;
-        appendMessage(msg, 'user');
-        input.value = '';
-        autoResize();
-        appendMessage('<span class="italic text-gray-400">Digitando<span class="animate-blink">...</span></span>', 'bot', true);
-
-        fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-cookies-accepted': 'yes' },
-          body: JSON.stringify({ mensagem: msg })
-        })
-          .then(res => res.json())
-          .then(data => {
-            document.querySelector('.flex.mb-3.temp')?.remove();
-            appendMessage(data?.resposta || 'Erro na resposta', 'bot');
-          })
-          .catch(() => {
-            document.querySelector('.flex.mb-3.temp')?.remove();
-            appendMessage('Erro ao conectar com o servidor.', 'bot');
-          });
-      }
-
-      sendBtn.addEventListener('click', enviarMensagem);
-      input.addEventListener('keypress', e => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          enviarMensagem();
-        }
-      });
-      input.addEventListener('input', autoResize);
-    })();
-
-    // Registro do Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/assets/js/serviceworker.js');
-      });
-    }
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
