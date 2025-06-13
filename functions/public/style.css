@@ -4,7 +4,6 @@
     --text-color: #f0f0f0;
     --bg-color-start: #161623;
     --bg-color-end: #1a1a2e;
-    /* Fundo do cartão otimizado: sem blur, apenas transparência */
     --card-bg-color: rgba(30, 30, 50, 0.6); 
     --card-border-color: rgba(255, 255, 255, 0.2);
     --hover-color: rgba(255, 255, 255, 0.1);
@@ -22,20 +21,69 @@ body {
     background: linear-gradient(45deg, var(--bg-color-start), var(--bg-color-end));
     color: var(--text-color);
     min-height: 100vh;
-    overflow: hidden; /* Evita barras de rolagem durante as transições */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 }
 
 #app-container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    /* Define o ponto de fuga para a cena 3D */
+    perspective: 1200px; 
     position: relative;
-    display: flex;
-    flex-direction: column;
 }
 
+/* --- Tela de Introdução com Vídeo --- */
+#intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-color-start);
+    z-index: 200;
+    transition: opacity 0.6s ease-out, visibility 0.6s;
+}
+
+#intro-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.intro-video-container {
+    text-align: center;
+    max-width: 90%;
+    width: 450px;
+}
+
+#intro-video {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
+}
+
+#start-button {
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--selected-color);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#start-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* --- Estrutura do Quiz --- */
 #quiz-header {
     position: fixed;
     top: 0;
@@ -63,58 +111,41 @@ body {
     transition: width 0.4s ease-out;
 }
 
-/* O 'túnel' agora é um simples container centralizado */
 #quiz-tunnel {
-    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    position: relative;
-    width: 100%;
-    max-width: 600px; /* Limita a largura no desktop */
-    margin: 0 auto;
 }
 
-/* O carrossel agora é um container para o cartão ativo */
+/* O carrossel que se move no eixo Z */
 #quiz-carousel {
-    width: 100%;
-    height: auto;
-    position: relative;
+    /* Habilita o contexto 3D para os filhos */
+    transform-style: preserve-3d; 
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .question-card {
-    width: 100%;
+    position: absolute; /* Essencial para empilhamento em 3D */
+    width: clamp(300px, 90vw, 600px);
+    /* Centraliza o cartão no container do carrossel */
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
     padding: 2rem 1.5rem;
     background: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
     border-radius: 16px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px); /* Efeito de vidro moderno */
+    
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-
-    /* Animação de Entrada/Saída */
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    /* Dica de performance para o navegador */
-    will-change: transform, opacity; 
-}
-
-/* Estados da animação */
-.question-card.active {
-    opacity: 1;
-    transform: scale(1);
-    position: relative; /* Torna o cartão ativo o único a ocupar espaço */
-}
-
-.question-card.exiting {
-    opacity: 0;
-    transform: scale(1.1);
+    backface-visibility: hidden; /* Melhora performance da animação */
 }
 
 
@@ -166,26 +197,9 @@ body {
     opacity: 0.7;
 }
 
-#start-card .question-text, #result-card .question-text {
+#result-card .question-text {
     font-size: 1.8rem;
     font-weight: 700;
-}
-
-#start-btn {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    background: var(--selected-color);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#start-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .results-table {
@@ -227,18 +241,4 @@ body {
 
 .hidden {
     display: none !important;
-}
-
-.intro-video-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px 0;
-}
-
-#intro-video {
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    display: block;
 }
