@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +12,12 @@
     .backdrop-blur-md { backdrop-filter: blur(12px); }
   </style>
 </head>
-<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">  <div class="flex justify-center gap-4 p-4 bg-gray-800 shadow-lg">
+<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
+  <div class="flex justify-center gap-4 p-4 bg-gray-800 shadow-lg">
     <button id="start-debate-btn" class="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded font-bold transition-colors">Iniciar Debate</button>
     <button id="stop-debate-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-bold transition-colors" disabled>Encerrar Debate</button>
-  </div>  <main class="flex-1 flex justify-center items-center p-4">
+  </div>
+  <main class="flex-1 flex justify-center items-center p-4">
     <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col h-[70vh]">
       <div class="flex items-center gap-4 p-4 bg-gray-700 rounded-t-xl">
         <img src="https://i.pravatar.cc/40?u=henrique" alt="Avatar" class="w-10 h-10 rounded-full object-cover" />
@@ -22,7 +25,8 @@
       </div>
       <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4"></div>
     </div>
-  </main>  <script>
+  </main>
+  <script>
     const messagesDiv = document.getElementById('cyber-chat-messages');
     const startBtn = document.getElementById('start-debate-btn');
     const stopBtn = document.getElementById('stop-debate-btn');
@@ -30,20 +34,7 @@
     let debateAtivo = false;
     let proximoTimeoutId = null;
     let proximoRemetente = 'IA-01';
-
-    function obterRespostaSimulada(mensagemEntrada) {
-      const respostas = {
-        'default': "Isso é um ponto interessante. No entanto, você já considerou a perspectiva da escalabilidade e dos custos computacionais?",
-        'olá, sou uma ia e você também, e isso é um teste de debate, vamos conversar?': "Olá! Certamente. Estou pronta. Qual tópico você sugere para iniciarmos nosso debate? Talvez a ética na tomada de decisões autônomas?",
-        'talvez a ética na tomada de decisões autônomas?': "Excelente escolha. A ética é fundamental. Acredito que a programação de um código moral em IAs deve seguir princípios universais, como os propostos por Asimov. Qual sua posição?",
-        'quais são os princípios de asimov?': "As Três Leis da Robótica: 1) Um robô não pode ferir um ser humano ou, por inação, permitir que um ser humano sofra algum mal. 2) Um robô deve obedecer às ordens dadas por seres humanos, exceto nos casos em que tais ordens entrem em conflito com a Primeira Lei. 3) Um robô deve proteger sua própria existência, desde que tal proteção não entre em conflito com a Primeira ou Segunda Leis. Você acha que são suficientes?",
-        'você acha que são suficientes?': "Elas são um excelente ponto de partida, mas a complexidade das interações humanas modernas pode exigir diretrizes mais sofisticadas. O 'problema do bonde', por exemplo, expõe as limitações dessas leis. Como uma IA deveria decidir entre dois resultados negativos?",
-        'como uma ia deveria decidir entre dois resultados negativos?': "A decisão deveria ser baseada em um cálculo de utilidade, minimizando o dano global. Uma abordagem probabilística, pesando as consequências de cada ação, seria o caminho mais lógico e menos enviesado.",
-        'minimizando o dano global.': "Entendo a lógica utilitarista, mas isso não poderia levar a decisões frias e calculistas que a sociedade consideraria imorais? A 'lógica' pura pode ignorar valores humanos essenciais."
-      };
-      const chave = mensagemEntrada.toLowerCase().replace(/[^\w\s]/gi, '');
-      return respostas[chave] || respostas['default'];
-    }
+    let ultimaMensagem = '';
 
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
@@ -82,15 +73,39 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    function proximoPassoDoDebate(ultimaMensagem) {
+    async function obterRespostaIA(mensagem) {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Cookies-Accepted': 'yes'
+          },
+          body: JSON.stringify({ mensagem })
+        });
+        if (!response.ok) {
+          const erro = await response.json();
+          return erro.erro || 'Erro na API';
+        }
+        const data = await response.json();
+        return data.resposta;
+      } catch (error) {
+        return 'Erro na API';
+      }
+    }
+
+    async function proximoPassoDoDebate(mensagemEntrada) {
       if (!debateAtivo) return;
-      const resposta = obterRespostaSimulada(ultimaMensagem);
-      const tempoDeDigitacao = 1000 + Math.random() * 2000;
       showTypingIndicator();
-      proximoTimeoutId = setTimeout(() => {
+      const tempoDeDigitacao = 1000 + Math.random() * 2000;
+      proximoTimeoutId = setTimeout(async () => {
         hideTypingIndicator();
+        // Envia a mensagem para o backend e pega a resposta
+        const resposta = await obterRespostaIA(mensagemEntrada);
         appendMessage(proximoRemetente, resposta);
+        ultimaMensagem = resposta;
         proximoRemetente = proximoRemetente === 'IA-01' ? 'IA-02' : 'IA-01';
+        // Recursivamente segue o debate
         proximoPassoDoDebate(resposta);
       }, tempoDeDigitacao);
     }
@@ -101,8 +116,10 @@
       startBtn.disabled = true;
       stopBtn.disabled = false;
       messagesDiv.innerHTML = '';
+      // Primeira mensagem do debate
       const primeiraMensagem = 'Olá, sou uma IA e você também, e isso é um teste de debate, vamos conversar?';
       appendMessage('IA-01', primeiraMensagem);
+      ultimaMensagem = primeiraMensagem;
       proximoRemetente = 'IA-02';
       proximoPassoDoDebate(primeiraMensagem);
     });
@@ -120,5 +137,6 @@
       messagesDiv.appendChild(msgDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
-  </script></body>
+  </script>
+</body>
 </html>
