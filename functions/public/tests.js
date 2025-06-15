@@ -27,10 +27,13 @@ function startTest() {
                 TESTE 1 - IA APP <strong>tests.js</strong>.
                 Botão para acessar a IA do app
             </p>
-            <div class="flex justify-center">
-                <button onclick="alert('Funcionalidade de exemplo!')" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                    Teste IA
-                </button>
+           <div class="flex justify-center mb-8">
+    <button onclick="document.getElementById('gpt-frame').src='/gpt/index.html'" 
+        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+        Teste IA
+    </button>
+</div>
+<iframe id="gpt-frame" width="100%" height="800" frameborder="0" class="rounded-lg shadow"></iframe>
             </div>
         </div>
         <style>
