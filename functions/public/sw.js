@@ -2,8 +2,7 @@ const CACHE_NAME = 'personality-test-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/style.css',
-    '/script.js',
+    '/tests.js',
     '/manifest.json',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap'
     // Adicione aqui o caminho para seus ícones se desejar
