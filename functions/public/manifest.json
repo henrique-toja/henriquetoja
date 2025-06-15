@@ -1,11 +1,11 @@
 {
-  "name": "Teste Clínico de Personalidade Imersivo",
-  "short_name": "Teste Personalidade",
+  "name": "Henrique Toja - APP de Teste",
+  "short_name": "Testes",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#161623",
   "theme_color": "#1a1a2e",
-  "description": "Um teste de personalidade clínico com uma interface imersiva e gamificada.",
+  "description": "Aplicação direcionada a testes para desenvolvimento de softwares",
   "icons": [
     {
       "src": "icons/icon-192x192.png",
