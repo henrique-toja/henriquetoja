@@ -24,13 +24,12 @@ function startTest() {
         <div class="bg-gray-800 p-8 rounded-xl shadow-2xl animate-fade-in">
             <h2 class="text-3xl font-bold text-center text-white mb-6">Teste Iniciado!</h2>
             <p class="text-gray-300 text-center mb-8">
-                TESTE 1 - IA APP <strong>tests.js</strong>.
-                Botão para acessar a IA do app
+                TESTE 1 - CHAT IA APP
             </p>
            <div class="flex justify-center mb-8">
     <button onclick="document.getElementById('gpt-frame').src='/gpt/index.html'" 
         class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-        Teste IA
+        CHAT IA APP
     </button>
 </div>
 <iframe id="gpt-frame" width="100%" height="800" frameborder="0" class="rounded-lg shadow"></iframe>
