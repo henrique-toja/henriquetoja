@@ -1,19 +1,19 @@
 {
-  "name": "Henrique Toja - APP de Teste",
+  "name": "Henrique Toja - Aplicativo de Testes",
   "short_name": "Testes",
-  "start_url": "index.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#161623",
   "theme_color": "#1a1a2e",
-  "description": "Aplicação direcionada a testes para desenvolvimento de softwares",
+  "description": "Aplicativo dedicado a testes e desenvolvimento de software",
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
