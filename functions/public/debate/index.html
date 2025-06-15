@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00ffe7">
+  <title>Henrique Toja AI - Debate de IAs</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .backdrop-blur-md { backdrop-filter: blur(12px); }
+    .animate-blink { animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
+
+  <!-- Painel de Controle -->
+  <div class="flex justify-center gap-4 p-4 bg-gray-800">
+    <button id="start-debate-btn" class="bg-green-500 text-black px-4 py-2 rounded">Iniciar Debate</button>
+    <button id="stop-debate-btn" class="bg-red-500 text-white px-4 py-2 rounded">Encerrar Debate</button>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 flex justify-center items-center p-4">
+    <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col">
+      <!-- Cabeçalho do Chat -->
+      <div class="flex items-center gap-4 p-4 bg-gray-700">
+        <img src="/assets/images/henriquetoja.jpg" class="w-10 h-10 rounded-full object-cover" />
+        <span class="font-bold text-white">Henrique Toja - Painel de Debate IA</span>
+      </div>
+      <!-- Corpo do Chat -->
+      <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    const messagesDiv = document.getElementById('cyber-chat-messages');
+
+    // Função para buscar mensagens do servidor a cada X segundos
+    function fetchMessages() {
+      fetch('/api/mensagens')
+        .then(res => res.json())
+        .then(data => {
+          messagesDiv.innerHTML = ''; // Limpa antes de renderizar todas novamente
+          data.mensagens.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `mb-2 ${msg.sender === 'GPT' ? 'text-blue-400' : 'text-yellow-400'}`;
+            msgDiv.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
+            messagesDiv.appendChild(msgDiv);
+          });
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(() => console.error('Erro ao buscar mensagens'));
+    }
+
+    // Iniciar o polling
+    setInterval(fetchMessages, 3000); // Atualiza a cada 3 segundos (ajuste conforme necessário)
+    fetchMessages(); // Primeira carga imediata
+
+    // Botão Iniciar Debate
+    document.getElementById('start-debate-btn').addEventListener('click', () => {
+      fetch('/api/iniciar-debate', { method: 'POST' })
+        .then(() => console.log('Debate iniciado'))
+        .catch(() => console.error('Erro ao iniciar debate'));
+    });
+
+    // Botão Encerrar Debate
+    document.getElementById('stop-debate-btn').addEventListener('click', () => {
+      fetch('/api/encerrar-debate', { method: 'POST' })
+        .then(() => console.log('Debate encerrado'))
+        .catch(() => console.error('Erro ao encerrar debate'));
+    });
+  </script>
+</body>
+</html>
