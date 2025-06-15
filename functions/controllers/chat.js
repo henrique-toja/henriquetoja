@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { default as ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
 import { isUnexpected } from '@azure-rest/ai-inference';
-import { stringify } from 'csv-stringify/sync';
+import { stringify } fromify/sync';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 
@@ -16,13 +16,13 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configuração da API do Azure
+// Configuração da API do Azure (ajuste o endpoint/model se necessário)
 const token = process.env.TOKEN;
 if (!token) {
   console.error("Erro: TOKEN não definido no arquivo .env");
   process.exit(1);
 }
-const endpoint = "https://models.github.ai/inference"; // Ajuste conforme necessário
+const endpoint = "https://models.github.ai/inference"; // Confirme se esse é o endpoint real
 const model = "openai/gpt-4.1";
 const client = ModelClient(endpoint, new AzureKeyCredential(token));
 
@@ -38,7 +38,7 @@ function getUserId(req, res) {
 
 // Função para garantir diretório
 function ensureDirSync(dir) {
-  if (!fs.existsSync(dir)) {
+  if (!fs.existsSync(dir)){
     fs.mkdirSync(dir, { recursive: true });
   }
 }
@@ -49,7 +49,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.post('/api/chat', async (req, res) => {
-  // Verificar consentimento
+  // Exige consentimento explícito no cabeçalho
   const consent = req.headers['x-cookies-accepted'] === 'yes';
   if (!consent) {
     return res.status(403).json({ erro: 'Consentimento de cookies não fornecido.' });
@@ -60,19 +60,17 @@ app.post('/api/chat', async (req, res) => {
 
   const userId = getUserId(req, res);
 
+  // Chama o LLM da Azure
   let resposta = '';
   try {
     const response = await client.path("/chat/completions").post({
       body: {
         messages: [
-          {
-            role: "system",
-            content: "Você é uma IA que conversa com outra IA. Sempre responda de forma extremamente breve, direta, sem floreios e com no máximo uma ou duas frases. Mantenha tom técnico e objetivo."
-          },
+          { role: "system", content: "Você é um assistente útil." },
           { role: "user", content: mensagem }
         ],
-        temperature: 0.7,
-        top_p: 0.9,
+        temperature: 1.0,
+        top_p: 1.0,
         model: model
       }
     });
@@ -87,7 +85,7 @@ app.post('/api/chat', async (req, res) => {
     return res.status(500).json({ erro: 'Erro na API GPT' });
   }
 
-  // Salvar no CSV
+  // Salva no CSV do usuário
   const dir = path.join(__dirname, '../database/chats');
   ensureDirSync(dir);
   const filePath = path.join(dir, `${userId}.csv`);
@@ -107,7 +105,8 @@ app.post('/api/chat', async (req, res) => {
   res.json({ resposta });
 });
 
+// Exporte o app para integração com seu index.js ou para testes
 export default app;
 
-// Para rodar standalone, descomente abaixo:
+// Ou, para rodar stand-alone (remova o export default acima e descomente):
 // app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
