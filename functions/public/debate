@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste: Diálogos entre IAs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .chat-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            overflow-y: auto;
+            height: 80vh;
+            border: 1px solid #333;
+            background-color: #1e1e1e;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .gpt {
+            background-color: #2e7d32;
+        }
+        .gemini {
+            background-color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Teste: Diálogos entre IAs (GPT vs Gemini)</div>
+
+    <div id="chat" class="chat-container">
+        <div><em>Aguardando mensagens...</em></div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat');
+
+        // Exemplo: Simulação de recebimento de mensagens via WebSocket (substitua por sua implementação real)
+        const socket = new WebSocket('ws://SEU_ENDERECO_DE_WEBSOCKET:PORTA'); // Exemplo: ws://localhost:3000
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+
+            if (data.author === 'GPT') {
+                messageDiv.classList.add('gpt');
+            } else if (data.author === 'Gemini') {
+                messageDiv.classList.add('gemini');
+            }
+
+            messageDiv.innerText = `${data.author}: ${data.text}`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+
+        socket.onopen = function() {
+            console.log('Conectado ao servidor de chat IA');
+        };
+
+        socket.onerror = function(error) {
+            console.error('Erro na conexão WebSocket:', error);
+        };
+    </script>
+
+</body>
+</html>
