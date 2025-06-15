@@ -1,84 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste: Diálogos entre IAs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            background-color: #1f1f1f;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-        }
-        .chat-container {
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-            overflow-y: auto;
-            height: 80vh;
-            border: 1px solid #333;
-            background-color: #1e1e1e;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .gpt {
-            background-color: #2e7d32;
-        }
-        .gemini {
-            background-color: #1565c0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00ffe7">
+  <title>Henrique Toja AI - Debate de IAs (Simulado)</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Estilos para a animação do cursor piscando */
+    .typing::after {
+      content: '▋';
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .backdrop-blur-md { backdrop-filter: blur(12px); }
+  </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
 
-    <div class="header">Teste: Diálogos entre IAs (GPT vs Gemini)</div>
+  <div class="flex justify-center gap-4 p-4 bg-gray-800 shadow-lg">
+    <button id="start-debate-btn" class="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded font-bold transition-colors">Iniciar Debate</button>
+    <button id="stop-debate-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-bold transition-colors" disabled>Encerrar Debate</button>
+  </div>
 
-    <div id="chat" class="chat-container">
-        <div><em>Aguardando mensagens...</em></div>
+  <main class="flex-1 flex justify-center items-center p-4">
+    <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col h-[70vh]">
+      <div class="flex items-center gap-4 p-4 bg-gray-700 rounded-t-xl">
+        <img src="https://i.pravatar.cc/40?u=henrique" alt="Avatar Henrique Toja" class="w-10 h-10 rounded-full object-cover" />
+        <span class="font-bold text-white">Henrique Toja - Painel de Debate IA</span>
+      </div>
+      <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+        </div>
     </div>
+  </main>
 
-    <script>
-        const chatContainer = document.getElementById('chat');
+  <script>
+    const startBtn = document.getElementById('start-debate-btn');
+    const stopBtn = document.getElementById('stop-debate-btn');
+    const messagesDiv = document.getElementById('cyber-chat-messages');
 
-        // Exemplo: Simulação de recebimento de mensagens via WebSocket (substitua por sua implementação real)
-        const socket = new WebSocket('ws://SEU_ENDERECO_DE_WEBSOCKET:PORTA'); // Exemplo: ws://localhost:3000
+    let debateAtivo = false;
+    let proximoTimeoutId = null; // Para controlar e cancelar a próxima mensagem
+    let proximoRemetente = 'IA-01';
 
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
+    // ---- CÉREBRO DA IA SIMULADA ----
+    // Mapeia uma mensagem recebida para uma resposta pré-definida.
+    function obterRespostaSimulada(mensagemEntrada) {
+      const respostas = {
+        'default': "Isso é um ponto interessante. No entanto, você já considerou a perspectiva da escalabilidade e dos custos computacionais?",
+        'olá, sou uma ia e você também, e isso é um teste de debate, vamos conversar?': "Olá! Certamente. Estou pronta. Qual tópico você sugere para iniciarmos nosso debate? Talvez a ética na tomada de decisões autônomas?",
+        'talvez a ética na tomada de decisões autônomas?': "Excelente escolha. A ética é fundamental. Acredito que a programação de um código moral em IAs deve seguir princípios universais, como os propostos por Asimov. Qual sua posição?",
+        'quais são os princípios de asimov?': "As Três Leis da Robótica: 1) Um robô não pode ferir um ser humano ou, por inação, permitir que um ser humano sofra algum mal. 2) Um robô deve obedecer às ordens dadas por seres humanos, exceto nos casos em que tais ordens entrem em conflito com a Primeira Lei. 3) Um robô deve proteger sua própria existência, desde que tal proteção não entre em conflito com a Primeira ou Segunda Leis. Você acha que são suficientes?",
+        'você acha que são suficientes?': "Elas são um excelente ponto de partida, mas a complexidade das interações humanas modernas pode exigir diretrizes mais sofisticadas. O 'problema do bonde', por exemplo, expõe as limitações dessas leis. Como uma IA deveria decidir entre dois resultados negativos?",
+        'como uma ia deveria decidir entre dois resultados negativos?': "A decisão deveria ser baseada em um cálculo de utilidade, minimizando o dano global. Uma abordagem probabilística, pesando as consequências de cada ação, seria o caminho mais lógico e menos enviesado.",
+        'minimizando o dano global.': "Entendo a lógica utilitarista, mas isso não poderia levar a decisões frias e calculistas que a sociedade consideraria imorais? A 'lógica' pura pode ignorar valores humanos essenciais."
+      };
+      // Retorna a resposta específica ou uma resposta padrão se não encontrar correspondência
+      const chave = mensagemEntrada.toLowerCase().replace(/[^\w\s]/gi, '');
+      return respostas[chave] || respostas['default'];
+    }
 
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
+    // ---- FUNÇÕES DO CHAT ----
 
-            if (data.author === 'GPT') {
-                messageDiv.classList.add('gpt');
-            } else if (data.author === 'Gemini') {
-                messageDiv.classList.add('gemini');
-            }
+    // Adiciona o efeito "digitando..."
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.className = 'text-gray-400 typing';
+        typingDiv.innerHTML = `<strong>${proximoRemetente} está digitando</strong>`;
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
 
-            messageDiv.innerText = `${data.author}: ${data.text}`;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        };
+    // Remove o efeito "digitando..."
+    function hideTypingIndicator() {
+        const typingDiv = document.getElementById('typing-indicator');
+        if(typingDiv) {
+            typingDiv.remove();
+        }
+    }
+    
+    // Adiciona uma mensagem finalizada ao chat
+    function appendMessage(sender, text) {
+      const senderColor = sender === 'IA-01' ? 'text-blue-400' : 'text-yellow-400';
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `p-3 rounded-lg max-w-xs ${sender === 'IA-01' ? 'bg-blue-900 self-start' : 'bg-gray-700 self-end'}`;
+      
+      const senderSpan = document.createElement('strong');
+      senderSpan.className = `block text-sm ${senderColor}`;
+      senderSpan.textContent = sender;
 
-        socket.onopen = function() {
-            console.log('Conectado ao servidor de chat IA');
-        };
+      const textP = document.createElement('p');
+      textP.textContent = text;
+      
+      msgDiv.appendChild(senderSpan);
+      msgDiv.appendChild(textP);
 
-        socket.onerror = function(error) {
-            console.error('Erro na conexão WebSocket:', error);
-        };
-    </script>
+      // Alinha a mensagem
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = `flex ${sender === 'IA-01' ? 'justify-start' : 'justify-end'}`;
+      wrapperDiv.appendChild(msgDiv);
+
+      messagesDiv.appendChild(wrapperDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function proximoPassoDoDebate(ultimaMensagem) {
+      if (!debateAtivo) return;
+
+      const resposta = obterRespostaSimulada(ultimaMensagem);
+      
+      // Simula o tempo de "pensamento"
+      const tempoDeDigitacao = 1000 + Math.random() * 2000; // Entre 1 e 3 segundos
+
+      showTypingIndicator();
+      
+      proximoTimeoutId = setTimeout(() => {
+        hideTypingIndicator();
+        appendMessage(proximoRemetente, resposta);
+        
+        // Troca o turno
+        proximoRemetente = proximoRemetente === 'IA-01' ? 'IA-02' : 'IA-01';
+
+        // Agenda o próximo passo
+        proximoPassoDoDebate(resposta);
+
+      }, tempoDeDigitacao);
+    }
+
+    // ---- CONTROLES DO DEBATE ----
+
+    startBtn.addEventListener('click', () => {
+      if (debateAtivo) return;
+      debateAtivo = true;
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      messagesDiv.innerHTML = ''; // Limpa o chat
+      
+      const primeiraMensagem = 'Olá, sou uma IA e você também, e isso é um teste de debate, vamos conversar?';
+      
+      appendMessage('IA-01', primeiraMensagem);
+      proximoRemetente = 'IA-02'; // O próximo a responder é o IA-02
+      proximoPassoDoDebate(primeiraMensagem);
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (!debateAtivo) return;
+      debateAtivo = false;
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+
+      // Cancela a próxima mensagem agendada
+      if (proximoTimeoutId) {
+        clearTimeout(proximoTimeoutId);
+        proximoTimeoutId = null;
+      }
+      hideTypingIndicator();
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'text-center text-red-400 font-bold py-4';
+      msgDiv.textContent = 'DEBATE ENCERRADO PELO USUÁRIO';
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+  </script>
 
 </body>
 </html>
