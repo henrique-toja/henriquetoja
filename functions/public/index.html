@@ -3,42 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Web App com finalidade de testes</title>
-
-    <meta name="theme-color" content="#1a1a2e"/>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <link rel="stylesheet" href="style.css">
+    <title>Plataforma de Testes Dinâmicos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div id="app-container">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Garante que o fundo cubra toda a tela */
+            background-color: #111827; /* bg-gray-900 */
+            color: #f3f4f6; /* text-gray-100 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            /* Define o cenário 3D */
+            perspective: 1000px;
+        }
 
+        #app-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem;
+        }
+
+        /* Estilo e transição para a tela de introdução */
+        #intro-screen {
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        /* O cartão 3D inicial */
+        #intro-card {
+            background-color: #1f2937; /* bg-gray-800 */
+            border: 1px solid #374151; /* border-gray-700 */
+            border-radius: 1rem; /* rounded-xl */
+            padding: 2.5rem; /* p-10 */
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            /* Posição inicial do cartão em 3D */
+            transform: rotateY(25deg) scale(0.9);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), -15px 0 30px -10px rgba(0, 255, 255, 0.1);
+        }
+
+        body:not(.test-started) #intro-card:hover {
+             transform: rotateY(0deg) scale(1);
+        }
+
+        /* Animação de "entrada na tela" quando o teste começa */
+        body.test-started #intro-screen {
+            opacity: 0;
+            pointer-events: none;
+            /* Move a tela para "longe" para não atrapalhar */
+            transform: scale(1.2);
+        }
+
+        /* Estilo e transição para a tela do teste */
+        #test-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 800px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in 0.4s;
+            pointer-events: none;
+        }
+
+        body.test-started #test-container {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+    <div id="app-container">
+        <!-- TELA DE INTRODUÇÃO COM O CARTÃO 3D -->
         <div id="intro-screen">
-            <div class="intro-video-container">
-                <video id="intro-video" autoplay muted loop playsinline>
-                    <source src="video.mp4" type="video/mp4">
-                    Seu navegador não suporta o formato de vídeo.
-                </video>
-                <button id="start-button">Iniciar Teste</button>
+            <div id="intro-card">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Plataforma de Testes</h1>
+                <p class="text-gray-400 mb-8">
+                    Clique no botão abaixo para carregar e iniciar o teste dinamicamente.
+                </p>
+                <button id="start-button" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-cyan-500/20">
+                    Iniciar
+                </button>
             </div>
         </div>
 
-        <header id="quiz-header" class="hidden">
-            <div class="progress-bar-container">
-                <div id="progress-bar"></div>
-            </div>
-        </header>
-
-        <main id="quiz-tunnel" class="hidden">
-            <div id="quiz-carousel">
-                </div>
-        </main>
-
+        <!-- O CONTEÚDO DO TESTE SERÁ INJETADO AQUI -->
+        <div id="test-container">
+            <!-- tests.js irá popular esta área -->
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('start-button');
+
+            startButton.addEventListener('click', () => {
+                // Adiciona a classe que dispara as animações CSS
+                document.body.classList.add('test-started');
+
+                // Após a animação de introdução, carrega o script do teste
+                setTimeout(() => {
+                    loadTestScript();
+                }, 500); // Tempo para a animação do card
+            });
+
+            function loadTestScript() {
+                // Cria um elemento <script> dinamicamente
+                const script = document.createElement('script');
+                script.src = 'tests.js'; // Define o arquivo a ser carregado
+                script.defer = true;
+
+                // Adiciona o script ao final do body, o que fará com que o navegador o carregue e execute
+                document.body.appendChild(script);
+
+                script.onerror = () => {
+                    // Exibe uma mensagem de erro se o script não puder ser carregado
+                    const testContainer = document.getElementById('test-container');
+                    testContainer.innerHTML = `
+                        <div class="bg-red-900 border border-red-700 text-red-200 p-6 rounded-lg text-center">
+                            <h2 class="text-2xl font-bold mb-2">Erro ao Carregar</h2>
+                            <p>Não foi possível carregar o arquivo <strong>tests.js</strong>. Verifique se o arquivo existe e tente novamente.</p>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>
+
