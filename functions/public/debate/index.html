@@ -1,101 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#00ffe7">
-  <title>Henrique Toja AI - Debate de IAs</title>
+  <title>Henrique Toja AI - Debate de IAs (Teste)</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    .backdrop-blur-md { backdrop-filter: blur(12px); }
-    .animate-blink { animation: blink 1s infinite; }
+    .typing::after { content: '▋'; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .backdrop-blur-md { backdrop-filter: blur(12px); }
   </style>
 </head>
 <body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
-
-  <!-- Painel de Controle -->
-  <div class="flex justify-center gap-4 p-4 bg-gray-800">
-    <button id="start-debate-btn" class="bg-green-500 text-black px-4 py-2 rounded">Iniciar Debate</button>
-    <button id="stop-debate-btn" class="bg-red-500 text-white px-4 py-2 rounded">Encerrar Debate</button>
+  <div class="flex justify-center gap-4 p-4 bg-gray-800 shadow-lg">
+    <button id="start-debate-btn" class="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded font-bold transition-colors">Iniciar Debate</button>
+    <button id="stop-debate-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-bold transition-colors" disabled>Encerrar Debate</button>
   </div>
-
-  <!-- Corpo do Chat -->
   <main class="flex-1 flex justify-center items-center p-4">
-    <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col">
-      <div class="flex items-center gap-4 p-4 bg-gray-700">
-        <img src="/assets/images/henriquetoja.jpg" class="w-10 h-10 rounded-full object-cover" />
-        <span class="font-bold text-white">Henrique Toja - Painel de Debate IA</span>
+    <div class="max-w-lg w-full bg-gray-800 rounded-xl shadow-lg flex flex-col h-[70vh]">
+      <div class="flex items-center gap-4 p-4 bg-gray-700 rounded-t-xl">
+        <img src="https://i.pravatar.cc/40?u=henrique" alt="Avatar" class="w-10 h-10 rounded-full object-cover" />
+        <span class="font-bold text-white">Debate IA</span>
       </div>
-      <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
+      <div id="cyber-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4"></div>
     </div>
   </main>
-
   <script>
-    let debateAtivo = false;
     const messagesDiv = document.getElementById('cyber-chat-messages');
+    const startBtn = document.getElementById('start-debate-btn');
+    const stopBtn = document.getElementById('stop-debate-btn');
 
-    function appendMessage(sender, text) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `mb-2 ${sender === 'Debate' ? 'text-blue-400' : 'text-yellow-400'}`;
-      msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
-      messagesDiv.appendChild(msgDiv);
+    let debateAtivo = false;
+    let proximoTimeoutId = null;
+    let proximoRemetente = 'IA-01';
+    let ultimaMensagem = '';
+
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typing-indicator';
+      typingDiv.className = 'text-gray-400 typing';
+      typingDiv.innerHTML = `<strong>${proximoRemetente} está digitando</strong>`;
+      messagesDiv.appendChild(typingDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    function enviarParaGpt(mensagem) {
-      fetch('/api/enviar-para-gpt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mensagem })
-      })
-      .then(() => console.log('Mensagem enviada ao GPT:', mensagem))
-      .catch(() => console.error('Erro ao enviar para GPT'));
+    function hideTypingIndicator() {
+      const typingDiv = document.getElementById('typing-indicator');
+      if (typingDiv) typingDiv.remove();
     }
 
-    function receberDaGpt() {
+    function appendMessage(sender, text) {
+      const senderColor = sender === 'IA-01' ? 'text-blue-400' : 'text-yellow-400';
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `p-3 rounded-lg max-w-xs ${sender === 'IA-01' ? 'bg-blue-900 self-start' : 'bg-gray-700 self-end'}`;
+
+      const senderSpan = document.createElement('strong');
+      senderSpan.className = `block text-sm ${senderColor}`;
+      senderSpan.textContent = sender;
+
+      const textP = document.createElement('p');
+      textP.textContent = text;
+
+      msgDiv.appendChild(senderSpan);
+      msgDiv.appendChild(textP);
+
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = `flex ${sender === 'IA-01' ? 'justify-start' : 'justify-end'}`;
+      wrapperDiv.appendChild(msgDiv);
+
+      messagesDiv.appendChild(wrapperDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    async function obterRespostaIA(mensagem) {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Cookies-Accepted': 'yes'
+          },
+          body: JSON.stringify({ mensagem })
+        });
+        if (!response.ok) {
+          const erro = await response.json();
+          return erro.erro || 'Erro na API';
+        }
+        const data = await response.json();
+        return data.resposta;
+      } catch (error) {
+        return 'Erro na API';
+      }
+    }
+
+    async function proximoPassoDoDebate(mensagemEntrada) {
       if (!debateAtivo) return;
-      fetch('/api/mensagem-do-gpt')
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.mensagem) {
-            appendMessage('GPT', data.mensagem);
-            enviarParaGpt(data.mensagem);  // Repassa para o GPT responder novamente
-          }
-        })
-        .catch(() => console.error('Erro ao receber mensagem do GPT'));
+      showTypingIndicator();
+      const tempoDeDigitacao = 1000 + Math.random() * 2000;
+      proximoTimeoutId = setTimeout(async () => {
+        hideTypingIndicator();
+        // Envia a mensagem para o backend e pega a resposta
+        const resposta = await obterRespostaIA(mensagemEntrada);
+        appendMessage(proximoRemetente, resposta);
+        ultimaMensagem = resposta;
+        proximoRemetente = proximoRemetente === 'IA-01' ? 'IA-02' : 'IA-01';
+        // Recursivamente segue o debate
+        proximoPassoDoDebate(resposta);
+      }, tempoDeDigitacao);
     }
 
-    // Início do Debate
-    document.getElementById('start-debate-btn').addEventListener('click', () => {
+    startBtn.addEventListener('click', () => {
       if (debateAtivo) return;
       debateAtivo = true;
-      appendMessage('Debate', 'Iniciando o debate...');
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      messagesDiv.innerHTML = '';
+      // Primeira mensagem do debate
       const primeiraMensagem = 'Olá, sou uma IA e você também, e isso é um teste de debate, vamos conversar?';
-      appendMessage('Debate', primeiraMensagem);
-
-      // Envia a primeira mensagem para o GPT
-      fetch('/api/enviar-para-gpt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mensagem: primeiraMensagem })
-      })
-      .then(() => console.log('Primeira mensagem enviada'))
-      .catch(() => console.error('Erro ao enviar primeira mensagem'));
+      appendMessage('IA-01', primeiraMensagem);
+      ultimaMensagem = primeiraMensagem;
+      proximoRemetente = 'IA-02';
+      proximoPassoDoDebate(primeiraMensagem);
     });
 
-    // Encerramento do Debate
-    document.getElementById('stop-debate-btn').addEventListener('click', () => {
+    stopBtn.addEventListener('click', () => {
+      if (!debateAtivo) return;
       debateAtivo = false;
-      appendMessage('Debate', 'Debate encerrado.');
-      fetch('/api/encerrar-debate', { method: 'POST' }).catch(() => console.error('Erro ao encerrar debate'));
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      if (proximoTimeoutId) clearTimeout(proximoTimeoutId);
+      hideTypingIndicator();
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'text-center text-red-400 font-bold py-4';
+      msgDiv.textContent = 'DEBATE ENCERRADO PELO USUÁRIO';
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
-
-    // Polling para buscar as respostas do GPT a cada 3 segundos
-    setInterval(() => {
-      if (debateAtivo) receberDaGpt();
-    }, 3000);
   </script>
-
 </body>
 </html>
